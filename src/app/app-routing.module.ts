@@ -31,6 +31,7 @@ import { VerifyComponent } from './issure/verify/verify.component';
 import { AdvanceEditorComponent } from './issure/advance-editor/advance-editor.component';
 import { PdfViewComponent } from './issure/pdf-view/pdf-view.component';
 // import { CreateCertificateComponent } from './create-certificate/create-certificate.component';
+ import { BulkRecordsComponent } from './issure/bulk-records/bulk-records.component';
 // import { FaqComponent } from './custom-components/faq/faq.component';
 const routes: Routes = [
 // Home
@@ -106,7 +107,9 @@ const routes: Routes = [
  { path: 'dashboard', component: DashboardComponent , canActivate: [AuthGuard] },
  { path: 'records', component: GetRecordsComponent , canActivate: [AuthGuard] },
  { path: 'records/:document', component: GetRecordsComponent , canActivate: [AuthGuard] },
- { path: 'add-records/:document', component: AddRecordsComponent , canActivate: [AuthGuard] },
+{ path: 'records/:document/:id', component: GetRecordsComponent , canActivate: [AuthGuard] },
+ { path: 'add-records/:document/:id', component: AddRecordsComponent , canActivate: [AuthGuard] }, 
+{ path: 'add-records/:document', component: AddRecordsComponent , canActivate: [AuthGuard] },
 //  { path: 'certificate/:form', component: AddCertificateComponent , canActivate: [AuthGuard] },
 { path: 'certificate', component: AddCertificateComponent , canActivate: [AuthGuard] },
 
@@ -115,11 +118,11 @@ const routes: Routes = [
  { path: 'advance-editor', component: AdvanceEditorComponent  },
  { path: 'pdf-view', component: PdfViewComponent  , canActivate: [AuthGuard] },
  { path: 'pdf-view/:document/:id', component: PdfViewComponent  , canActivate: [AuthGuard] },
+  { path: 'bulk-records/:id', component: BulkRecordsComponent , canActivate: [AuthGuard] },
+ { path: 'bulk-records/:document/:id', component: BulkRecordsComponent , canActivate: [AuthGuard] },
+  { path: 'pdf-view', component: PdfViewComponent  , canActivate: [AuthGuard] },
+  { path: 'pdf-view/:document/:id', component: PdfViewComponent  , canActivate: [AuthGuard] },
  
-
-
-
-
 // Installation
 { path: 'install', component: InstallComponent },
 

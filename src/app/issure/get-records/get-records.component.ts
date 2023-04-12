@@ -19,11 +19,13 @@ export class GetRecordsComponent implements OnInit {
 
   documentName: string;
   pdfName: any;
+  id: string;
+
   constructor(public router: Router, public route: ActivatedRoute,
     public generalService: GeneralService, private http: HttpClient,
     private config: AppConfig) { 
       this.documentName = this.route.snapshot.paramMap.get('document'); 
-     
+      this.id = this.route.snapshot.paramMap.get('id'); 
 
    // this.item = this.router.getCurrentNavigation().extras.state.item;
 
@@ -60,7 +62,7 @@ this.getRecords();
   }
 
   downloadVc(item){
-    this.vcOsid = item.osid;
+    this.vcOsid = item.id;
     this.pdfName = (item.name) ? item.name : this.documentName;
 
     let headers = {
@@ -69,17 +71,7 @@ this.getRecords();
     };
    
     this.downloadPDF();
-    // this.http.get('https://sunbird-certificate-demo.xiv.in/registry/api/v1/' + this.documentName + '/' + item.osid, {headers}).subscribe(
-    //   (data) => {
-       
-    //     console.log(data);
-    //   },
-    //   (error) => {
-    //     console.log('getPDF error: ',error);
-    //   }
-    // );
-
-   
+    
   }
   onPress(){
     this.router.navigateByUrl['/pdf-view'];

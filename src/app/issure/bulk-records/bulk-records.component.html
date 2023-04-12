@@ -27,11 +27,7 @@
   <div class="card">
     <div class="p16 card-body d-flex justify-content-between align-items-center">
       <div class="mb-1 mr-5">
-        <!-- <form action="" method="POST" enctype="multipart/form-data">
-          <label type="button" for="file-upload" class="primary-text-color fw-bold">{{'BROWSE_FILE' | translate}}</label>
-          <p class="mb-1" style="color: #8D9091;">{{'FILE_IN_CSV_FORMAT' | translate}} </p>
-          <input type="file" id="file-upload" name="uploaded-file" accept="text/csv">
-        </form> -->
+    
         <label type="button" class="primary-text-color fw-bold">{{'BROWSE_FILE' | translate}}</label>
         <input type="file" class="file-input" accept=".csv"
        (change)="onFileSelected($event)" #fileUpload>

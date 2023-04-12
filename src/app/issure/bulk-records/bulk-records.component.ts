@@ -42,22 +42,15 @@ export class BulkRecordsComponent implements OnInit {
   ngOnInit(): void {
 
     this.generalService.getData('/Schema/' + this.id).subscribe((res) => {
-      console.log(res);
       this.schemaObj = JSON.parse(res.schema);
       this.tempObj = this.schemaObj.definitions[this.schemaObj.title].properties;
-      console.log(this.tempObj);
       Object.values(this.tempObj).forEach(entry => {
-        console.log(entry['title']);
         this.nameArray.push(entry['title']);
 
       });
 
-      console.log(this.nameArray);
       this.nameArray2 = this.nameArray.join();
-      console.log(this.nameArray2);
-
-      // this.CsvService.downloadCSVTemplate(this.nameArray2);
-      // this.downloadCSV(this.nameArray2);
+    
     }, err => {
 
       console.log(err);
@@ -71,7 +64,6 @@ export class BulkRecordsComponent implements OnInit {
         Accept: '*/*'
       }
        this.generalService.getData(this.domain + '/bulk/v1/bulk/sample/' + this.schemaName, true, header).subscribe((res) => {
-        console.log(res);
         this.colomNames = res;
       }, err => {
         console.log(err);
@@ -82,18 +74,9 @@ export class BulkRecordsComponent implements OnInit {
         }
       });
     
-
   }
 
- async getColomList()
-  {
-    await this.csvService.getCSVColName(this.domain, this.schemaName).then((res)=>{
-      this.colomNames = res;
-    }, (err)=>{
-      this.colomNames = err;
-    });
-    console.log( this.colomNames);
-  }
+
 
   downloadCSV() {
    this.csvService.downloadCSVTemplate(this.colomNames);
@@ -109,16 +92,7 @@ export class BulkRecordsComponent implements OnInit {
       this.fileName = file.name;
 
       const formData = new FormData();
-   /*   this.domain = this.config.getEnv('domainName');
-      formData.append("file", file);
-      this.apiUrl = this.domain + "/bulk/v1/uploadFiles/" + this.schemaName;
-      this.generalService.postData(this.apiUrl, formData).subscribe((res) => {
-        console.log(res);
-
-      }, err => {
-
-        console.log(err);
-      });*/
+  
     }
   }
 
@@ -136,7 +110,6 @@ export class BulkRecordsComponent implements OnInit {
       this.apiUrl = this.domain + "/bulk/v1/uploadFiles/" + this.schemaName;
       
       this.generalService.postData(this.apiUrl, formData).subscribe((res) => {
-        console.log(res);
         this.item = res;
         this.csvReport = true;
         this.getAllUploadedFile();
@@ -156,7 +129,6 @@ export class BulkRecordsComponent implements OnInit {
   {
     this.domain = this.config.getEnv('domainName');
     this.generalService.getData(this.domain + '/bulk/v1/bulk/uploadedFiles', true).subscribe((res) => {
-      console.log(res);
       this.uploadFileList = res[res.length - 1];
       this.showReportPopup();
      
@@ -174,10 +146,9 @@ export class BulkRecordsComponent implements OnInit {
     let header = {
       Accept: '*/*'
     }
-   // this.generalService.getData(this.domain + '/bulk/v1/download/' + this.uploadFileList.ID, true).subscribe((res) => {
+
     this.generalService.getData(this.domain + '/bulk/v1/download/' + this.uploadFileList.ID, true, header).subscribe((res) => {
   let bulkReport: any = '`' + res + '`'; 
-  console.log(bulkReport);
      
   this.csvService.downloadCSVTemplate(bulkReport);
   
@@ -185,7 +156,6 @@ export class BulkRecordsComponent implements OnInit {
       if(err.status == 200)
       {
         let bulkReport: any = '`' + err.error.text + '`'; 
-        console.log(bulkReport);
         this.csvService.downloadCSVTemplate(bulkReport);
       }
       console.log(err);

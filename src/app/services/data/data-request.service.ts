@@ -21,7 +21,9 @@ export class DataService {
   constructor(
     private http: HttpClient,
     public keycloak: KeycloakService) {
-      this.token = localStorage.getItem('token');
+       this.keycloak.getToken().then((token)=>{
+        this.token = token;
+      })
   }
 
 /**
@@ -123,24 +125,6 @@ export class DataService {
     });
 }
 
-
-// /**
-// * for making post api calls
-// * @param RequestParam param
-// */
-// put(requestParam): Observable<any> {
-//   const httpOptions: HttpOptions = {
-//     headers: requestParam.header ? this.getHeader(requestParam.header) : this.getHeader(),
-//     params: requestParam.param
-//   };
-//   return this.http.put(requestParam.url, requestParam.data, httpOptions).pipe(
-//     mergeMap((data: any) => {
-//       // if (data.responseCode !== 'OK') {
-//       //   return observableThrowError(data);
-//       // }
-//       return observableOf(data);
-//     }));
-// }
 
 
 /**

@@ -113,7 +113,6 @@ export class PdfViewComponent implements OnInit {
     reader.readAsDataURL(blob);
     reader.onloadend = function () {
       var base64String = reader.result;
-      console.log('Base64 String - ', base64String);
       return base64String;
      
     }

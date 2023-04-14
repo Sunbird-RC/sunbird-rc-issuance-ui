@@ -40,6 +40,7 @@
     --secondaryTextColor: #000000;
     --linkColor: #443DF6;
     --secondaryBtnBgColor: #e8f3f8;
+    --cardBorder: #00000020;
 
 
     //   dark
@@ -125,6 +126,12 @@
     background-color: var(--primaryColor) !important
 }
 
+.btn-primary-blue {
+    background: var(--secondaryBtnBgColor) !important;
+    color: var(--primarybgColor) !important;
+    border: 0 !important;
+}
+
 .ngx-pagination .current {
     background: var(--primaryColor) !important;
     ;
@@ -150,9 +157,11 @@ textarea.form-control {
     border-color: var(--primaryColor) !important;
     border: 0 !important;
 }
-
+.vl {
+    border-left: 3px solid #CCCCCC;
+    }
 .btn-style {
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     height: 40px;
 }
 
@@ -307,6 +316,13 @@ $primary-color-dark: #000;
     background-color: $gray-color!important;
 }
 
+.gobackBtn {
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
+  
 // .text-primary-color{
 //     color: $primary-color;
 // }
@@ -351,6 +367,22 @@ a {
    // color: var(--linkColor) !important;
 }
 
+.file-upload{
+    border: 1px solid #8D9091;
+    width: 300px;
+    padding:10px;
+    display: flex;
+    justify-content: space-between;
+
+}
+.upload-btn{
+    border: none;
+    background: transparent;
+}
+.browse-file{
+margin-top: auto;
+margin-bottom: auto;
+}
 // /* Importing Bootstrap SCSS file. */
 // @import '~bootstrap/scss/bootstrap';
 button.calendar,
@@ -711,6 +743,7 @@ formly-autocomplete-type .ng-select {
 
 .card {
     background-color: var(--cardBackground) !important;
+    border: 1px solid  var(--cardBorder) !important;
 }
 
 .floating-bottom {
@@ -775,7 +808,7 @@ p {
 }
 
 .text-grey {
-    color: var(--secondaryTextColor) !important;
+    color: $gray-color !important;
 }
 
 .form-group {
@@ -790,6 +823,9 @@ label {
     color: var(--primaryTextColor) !important;
 }
 
+.bg-pink{
+    background-color: #981F4D;
+}
 .lh-32 {
     line-height: 32px;
 }

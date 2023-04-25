@@ -95,30 +95,29 @@ export class AdvanceEditorComponent implements OnInit {
     this.propertyArr = [];
     let _self = this;
 
-    if(jsonSchema != undefined)
-    {
-    Object.keys(jsonSchema).forEach(function (key) {
-      let resultJson;
-      _self.propertyArr.push(key);
+    if (jsonSchema != undefined) {
+      Object.keys(jsonSchema).forEach(function (key) {
+        let resultJson;
+        _self.propertyArr.push(key);
 
-      if (jsonSchema[key].type == 'array') {
-        resultJson = _self.nastedJsonSep(jsonSchema, key, jsonFields.definitions[_self.jsonTitle]);
-      } else if (jsonSchema[key].type == 'object') {
-        resultJson = _self.objectJsonSchema(jsonSchema, key, jsonFields.definitions[_self.jsonTitle]);
-      } else {
-        resultJson = _self.plainJson(jsonSchema, key, jsonFields.definitions[_self.jsonTitle]);
-      }
+        if (jsonSchema[key].type == 'array') {
+          resultJson = _self.nastedJsonSep(jsonSchema, key, jsonFields.definitions[_self.jsonTitle]);
+        } else if (jsonSchema[key].type == 'object') {
+          resultJson = _self.objectJsonSchema(jsonSchema, key, jsonFields.definitions[_self.jsonTitle]);
+        } else {
+          resultJson = _self.plainJson(jsonSchema, key, jsonFields.definitions[_self.jsonTitle]);
+        }
 
-      _self.myForm['components'].push(resultJson);
+        _self.myForm['components'].push(resultJson);
 
-    });
+      });
 
-    // for (let j = 0; j < jsonFields.definitions[this.jsonTitle].required.length; j++) {
-    //   this.options.disabled.push(jsonFields.definitions[this.jsonTitle].required[j]);
-    // }
-  }else{
-    this.myForm['components'] = [];
-  }
+      // for (let j = 0; j < jsonFields.definitions[this.jsonTitle].required.length; j++) {
+      //   this.options.disabled.push(jsonFields.definitions[this.jsonTitle].required[j]);
+      // }
+    } else {
+      this.myForm['components'] = [];
+    }
 
   }
 
@@ -186,7 +185,6 @@ export class AdvanceEditorComponent implements OnInit {
           }
 
           containerJson['components'].push(tempField);
-          // console.log({ containerJson });
         });
 
         return containerJson;
@@ -244,62 +242,49 @@ export class AdvanceEditorComponent implements OnInit {
       this.jsonFields.definitions[this.jsonTitle].properties = tempField;
       this.updateCredentialTemp();
 
-
       this.jsonEditor.set(this.jsonFields);
-      // this.jsonEditor['_data']['_osConfig']['credentialTemplate'] = this.vcFields;
-     //  this.newItemEvent.emit(this.jsonEditor);
-
     }
   }
 
-  updateCredentialTemp()
-  {
-    let certTmpJson =  {};//this.vcFields['credentialSubject'];
+  updateCredentialTemp() {
+    let certTmpJson = {};
     certTmpJson['type'] = (this.vcFields['credentialSubject'].hasOwnProperty('type') && this.vcFields['credentialSubject'] != '') ? this.vcFields['credentialSubject']['type'] : this.jsonFields.title;
 
-   // certTmpJson['type'] =  this.jsonFields.title;
+    let _self = this;
+    let propertyData = this.jsonFields.definitions[this.jsonFields.title].properties;
+    let contextJson = {}
+    contextJson[certTmpJson['type']] = {
+      "@id": "https://github.com/sunbird-specs/vc-specs#" + certTmpJson['type'],
+      "@context": {}
+    }
 
-      let _self = this;
-      let propertyData = this.jsonFields.definitions[this.jsonFields.title].properties;
+    Object.keys(propertyData).forEach(function (key) {
+      console.log({ key });
 
-     
 
-      let contextJson = {}
-      //this.vcFields["@context"][1]["@context"];
+      if (propertyData[key].type == 'string' || propertyData[key].type == 'number') {
+        certTmpJson[key] = "{{" + key + "}}";
+        contextJson[certTmpJson['type']]['@context'][key] = "schema:Text";
 
-      contextJson[certTmpJson['type']] = {
-        "@id":"https://github.com/sunbird-specs/vc-specs#" + certTmpJson['type'],
-        "@context": { }
+
+      } else if (propertyData[key].type == 'object') {
+        let objPro = propertyData[key].properties;
+        Object.keys(objPro).forEach(function (key2) {
+          console.log({ key2 });
+
+          certTmpJson[key2] = "{{" + key + "." + key2 + "}}";
+        })
       }
 
-      Object.keys(propertyData).forEach(function (key) {
-        console.log({ key });
+    });
 
-       
-        if(propertyData[key].type == 'string' || propertyData[key].type == 'number')
-        {
-          certTmpJson[key] = "{{" + key + "}}";
-          contextJson[certTmpJson['type']]['@context'][key] = "schema:Text";
 
-         
-        }else if(propertyData[key].type == 'object'){
-          let objPro = propertyData[key].properties;
-          Object.keys(objPro).forEach(function (key2) {
-            console.log({ key2 });
-
-            certTmpJson[key2] = "{{" + key + "." + key2 + "}}";
-          })
-        }
-       
-      });
-
-    
-      let tempjson =   this.vcFields
-      this.vcFields = { 
-        '@context' : [
+    let tempjson = this.vcFields
+    this.vcFields = {
+      '@context': [
         "https://www.w3.org/2018/credentials/v1",
-        {    
-          '@context' : {
+        {
+          '@context': {
             "@version": 1.1,
             "@protected": true,
           }
@@ -311,29 +296,19 @@ export class AdvanceEditorComponent implements OnInit {
       ],
       "issuanceDate": "2021-08-27T10:57:57.237Z",
     };
-      this.vcFields['credentialSubject'] = certTmpJson;
-      this.vcFields["@context"][1]["@context"] = contextJson;
+    this.vcFields['credentialSubject'] = certTmpJson;
+    this.vcFields["@context"][1]["@context"] = contextJson;
 
-      this.vcEditor.set(this.vcFields);
-   //   this.vcFields["@context"][1]["@context"] = contextJson;
-     // this.jsonFields._osConfig['credentialTemplate'] = this.vcFields;
-     // this.showJson('');
+    this.vcEditor.set(this.vcFields);
   }
 
   showJson(event) {
     console.log(event);
     this.vcFields = JSON.parse(event.target.value);
     this.vcFieldsText = event.target.value;
-    // this.vcEditor.set(this.vcFields);
   }
 
   saveAdvance() {
-    console.log(this.vcFields);
-    // console.log(this.jsonEditor['_data']);
-
-    //let value = this.vcEditorOptions.onChange  = () => { this.vcEditor.getText();}
-    // console.log( this.vcEditor.getText())
-
     this.jsonEditor['_data']['_osConfig']['credentialTemplate'] = this.vcFields;
     this.newItemEvent.emit(this.jsonEditor);
   }
@@ -366,7 +341,7 @@ export class AdvanceEditorComponent implements OnInit {
           tempFjson[element.key] = this.arrayTypeFieldData(element);
         }
 
-      } if (element.type == 'select' ) {
+      } if (element.type == 'select') {
         tempFjson[element.key] = {
           "type": "string",
           "title": element.label,
@@ -387,42 +362,43 @@ export class AdvanceEditorComponent implements OnInit {
           "title": element.label,
           "default": false
         }
-      }  if (element.type == 'selectboxes') {
-        tempFjson[element.key] = {  type: 'select',
-        templateOptions: {
-          label: element.label,
-          multiple: true,
-          options: element['values']
-        }
-      //   tempFjson[element.key] = {
-      //     "type": "array",
-      //   "title": element.label,
-      //   "uniqueItems": true,
-      //   "items": {
-      //     "type": "string",
-      //     "enum": element['values']
-      //   }
-      // }
-      } 
-    }if (element.type == 'radio') {
-      /*  tempFjson[element.key] = {
-          "type": "radio",
-          "title": element.label,
-          "templateOptions": {
-            "options": element['values']
+      } if (element.type == 'selectboxes') {
+        tempFjson[element.key] = {
+          type: 'select',
+          templateOptions: {
+            label: element.label,
+            multiple: true,
+            options: element['values']
           }
-        }*/
+          //   tempFjson[element.key] = {
+          //     "type": "array",
+          //   "title": element.label,
+          //   "uniqueItems": true,
+          //   "items": {
+          //     "type": "string",
+          //     "enum": element['values']
+          //   }
+          // }
+        }
+      } if (element.type == 'radio') {
+        /*  tempFjson[element.key] = {
+            "type": "radio",
+            "title": element.label,
+            "templateOptions": {
+              "options": element['values']
+            }
+          }*/
 
-        tempFjson[element.key] = { 
-           "enum":element['values'],
-           "title": element.label,
-        "widget": {
-          "formlyConfig": {
-            "type": "radio"
+        tempFjson[element.key] = {
+          "enum": element['values'],
+          "title": element.label,
+          "widget": {
+            "formlyConfig": {
+              "type": "radio"
+            }
           }
         }
       }
-    }
     });
 
     return tempFjson;
@@ -540,7 +516,6 @@ export class AdvanceEditorComponent implements OnInit {
 
 
   onDeleteComponent(e) {
-    alert('onDeleteComponent');
   }
 
   onSubmit(event) { }

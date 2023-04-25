@@ -72,11 +72,7 @@ export class PreviewHtmlComponent implements OnInit {
       this.issuerOsid = res[0].osid;
     });
 
-
-
-
   }
-
 
   async ngOnInit() {
 
@@ -179,8 +175,6 @@ export class PreviewHtmlComponent implements OnInit {
         run: function (editor) {
           if (editPanel == null) {
 
-
-
             const editMenuDiv = document.createElement('div');
 
             const arr = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'alpha', 'bravo', 'charlie', 'delta', 'echo', 'alpha', 'bravo', 'charlie', 'delta', 'echo'];
@@ -217,12 +211,7 @@ export class PreviewHtmlComponent implements OnInit {
               cardBContainer.appendChild(cardBdiv);		// append li to ul.
             }
 
-
-
             editMenuDiv.appendChild(cardDiv);
-
-
-
             const panels = pn.getPanel('views-container')
             panels.set('appendContent', editMenuDiv).trigger('change:appendContent')
             editPanel = editMenuDiv;
@@ -238,8 +227,6 @@ export class PreviewHtmlComponent implements OnInit {
             };
           }
           editPanel.style.display = 'block';
-
-
 
         },
         stop: function (editor) {
@@ -330,7 +317,6 @@ export class PreviewHtmlComponent implements OnInit {
   }
 
   cancel() {
-    // this.isPreview = false;
     localStorage.setItem('sampleData', '');
     this.router.navigate(['/dashboard']);
   }
@@ -343,13 +329,11 @@ export class PreviewHtmlComponent implements OnInit {
       .then(response => response.text())
       .then(data => {
            this.schemaContent = data;
-        // console.log({ data });
         data = JSON.parse(data);
         this.certificateTitle = data['title'];
         this.templateName = this.certificateTitle;
         this.userJson = data;
         this.addCrtTemplateFields();
-        // this.certificateTemplate = this.userJson['_osConfig']['credentialTemplate'];
         this.getCrtTempFields(this.userJson);
       });
 
@@ -357,8 +341,6 @@ export class PreviewHtmlComponent implements OnInit {
       .then(response => response.text())
       .then(data => {
         this.userHtml = data;
-
-        //   this.injectHTML();
       });
     }else{
       this.userHtml = doc.htmlContent;
@@ -379,9 +361,7 @@ export class PreviewHtmlComponent implements OnInit {
     fetch(url)
       .then(response => response.text())
       .then(data => {
-        //    this.schemaContent = data;
         console.log({ data });
-        //  console.log(JSON.parse(data));
       });
 
   }
@@ -516,11 +496,7 @@ export class PreviewHtmlComponent implements OnInit {
   }
 
   async submit() {
-   // this.addCrtTemplateFields();
-  
-    // this.schemaContent = this.jsonEditor.get();//JSON.stringify(this.userJson);
     this.schemaContent = (this.schemaContent) ? this.schemaContent : this.userJson;
-   // this.schemaContent = await this.addCrtTemplateFields();
 
     var htmlWithCss = this.editor.runCommand('gjs-get-inlined-html');
 

@@ -110,7 +110,7 @@ export class AddCertificateComponent implements OnInit {
 
   editTemplate() {
     localStorage.setItem('sampleData', JSON.stringify(this.sampleData));
-   this.router.navigate(['/preview-html'], { state: { item: this.sampleData } });
+    this.router.navigate(['/preview-html'], { state: { item: this.sampleData } });
   }
 
 
@@ -156,27 +156,26 @@ export class AddCertificateComponent implements OnInit {
     }, 500)
   }
 
-  onFileSelected(event)
-  {
-   
-      var f = event.target.files[0];
-let self=  this;
-      if (f) {
-          var r = new FileReader();
-          r.onload = function (e) {
-              var contents = e.target.result;
-              console.log({contents});
-              self.sampleData = {
-                'htmlContent' : contents
-              }
-              self.userHtml = contents;
-              self.injectHTML();
-          }
-          r.readAsText(f);
-      } else {
-          alert("Failed to load file");
+  onFileSelected(event) {
+
+    var f = event.target.files[0];
+    let self = this;
+    if (f) {
+      var r = new FileReader();
+      r.onload = function (e) {
+        var contents = e.target.result;
+        console.log({ contents });
+        self.sampleData = {
+          'htmlContent': contents
+        }
+        self.userHtml = contents;
+        self.injectHTML();
       }
-  
+      r.readAsText(f);
+    } else {
+      alert("Failed to load file");
+    }
+
 
   }
 

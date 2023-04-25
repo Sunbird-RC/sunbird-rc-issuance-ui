@@ -40,9 +40,17 @@ export class DashboardComponent implements OnInit {
   item: any;
   templatePath: any;
   entityName: any;
+  temp: any;
+  editedIssuerInfo: any;
+  isOpen: boolean = true;
+  modal: HTMLElement;
+
   constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
     private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
 
+  }
+  ngAfterViewChecked() {
+     (<HTMLInputElement>document.getElementById("formly_8_string_userId_0")).disabled = true; 
   }
 
   ngOnInit(): void {
@@ -69,7 +77,7 @@ export class DashboardComponent implements OnInit {
           this.definations = this.responseData.definitions;
           this.entityName = fieldset.definition;
           // this.property = this.definations[fieldset.definition].properties;
-         
+
         });
         this.schema["type"] = "object";
         this.schema["title"] = this.formSchema.title;
@@ -79,17 +87,20 @@ export class DashboardComponent implements OnInit {
         this.loadSchema();
       });
 
-    }, (error) => {
-      this.toastMsg.error('error', 'forms.json not found in src/assets/config/ - You can refer to examples folder to create the file')
-    })
+    }
+      ,
+       (error) => {
+        this.toastMsg.error('error', 'forms.json not found in src/assets/config/ - You can refer to examples folder to create the file')
+      }
+    )
   }
+
+
   loadSchema() {
     this.form2 = new FormGroup({});
     this.options = {};
     this.fields = [this.formlyJsonschema.toFieldConfig(this.schema)];
-
     this.schemaloaded = true;
-
   }
 
   checkProperty(fieldset) {
@@ -118,13 +129,11 @@ export class DashboardComponent implements OnInit {
 
   }
 
-
   getIssuer() {
     this.generalService.getData('Issuer').subscribe((res) => {
-      console.log(res);
       this.issuerInfo = res[0];
       this.model = res[0];
-      console.log(this.issuerInfo);
+      this.editedIssuerInfo = { ...this.issuerInfo };
     });
 
   }
@@ -142,17 +151,31 @@ export class DashboardComponent implements OnInit {
   openPreview() {
   }
 
+  closePops() {
+    this.isOpen = false;
+    this.modal = document.getElementById("prewiewProfile");
+    this.modal.style.display = "none";
+    const modalBackdrop = document.querySelector('.modal-backdrop.fade.show');
+    if (modalBackdrop) {
+      modalBackdrop.remove();
+    }
+  }
+
 
   submit() {
-    this.generalService.putData('/issuer', this.model['osid'], this.model).subscribe((res) => {
+    this.generalService.putData('/Issuer', this.model['osid'], this.model).subscribe((res) => {
+      this.temp = res;
       if (res.params.status == 'SUCCESSFUL') {
-        this.router.navigate(['/dashboard'])
-      }
-      else if (res.params.errmsg != '' && res.params.status == 'UNSUCCESSFUL') {
-        this.toastMsg.error('error', res.params.errmsg)
+        this.editedIssuerInfo = { ...this.issuerInfo };
+      } else if (res.params.errmsg != '' && res.params.status == 'UNSUCCESSFUL') {
+        this.toastMsg.error('error', res.params.errmsg);
       }
     }, (err) => {
-      this.toastMsg.error('error', err.error.params.errmsg)
+      this.toastMsg.error('error', err.error.params.errmsg);
+    }, () => {
+      this.closePops();
     });
   }
+
+
 }

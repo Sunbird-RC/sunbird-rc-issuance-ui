@@ -44,11 +44,9 @@ export class DashboardComponent implements OnInit {
   editedIssuerInfo: any;
   isOpen: boolean = true;
   modal: HTMLElement;
-  flag: boolean = false;
-  identifier: string;
 
   constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
-    private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService, private route: ActivatedRoute) {
+    private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
 
   }
   ngAfterViewChecked() {
@@ -56,17 +54,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    // this.route.params.subscribe(params => {
-    //   this.form = params['form'].split('/', 1)[0];
-    //   this.identifier = params['form'].split('/', 1)[1];
-    // });
-    // if(localStorage.getItem('entity-osid')){
-    //   this.identifier = localStorage.getItem('entity-osid')
-    // }
-    // else{
-    //   console.log("Not Authorized")
-    // }
     this.getDocument();
     this.getIssuer();
 
@@ -98,8 +85,6 @@ export class DashboardComponent implements OnInit {
         this.schema["properties"] = this.responseData.definitions[this.entityName].properties;
         this.schema["required"] = this.responseData.definitions[this.entityName].required;
         this.loadSchema();
-        // this.disableInputField();
-
       });
 
     }
@@ -143,30 +128,6 @@ export class DashboardComponent implements OnInit {
     }
 
   }
-
-  disableInputField(): void {
-    const form = document.getElementById('myForm');
-    const labels = document.getElementsByTagName('label');
-    const labelArray = Array.from(labels);
-    for (const label of labelArray) {
-      if (label.textContent === ' Email Id or Mobile number ') {
-        const elements = document.getElementsByClassName('ng-pristine');
-        const inputClass = label.getAttribute('for');
-        const input = form.querySelector(`.${inputClass}`);
-
-        if (elements) {
-          this.flag = true;
-          elements['disabled'] = true;
-        } else {
-          console.log(`Input element with id "${inputClass}" not found.`);
-        }
-
-        break;
-      }
-    }
-  }
-
-
 
   getIssuer() {
     this.generalService.getData('Issuer').subscribe((res) => {

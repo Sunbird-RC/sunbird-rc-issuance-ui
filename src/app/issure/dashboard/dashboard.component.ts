@@ -165,7 +165,6 @@ export class DashboardComponent implements OnInit {
   submit() {
     this.generalService.putData('/Issuer', this.model['osid'], this.model).subscribe((res) => {
       this.temp = res;
-      console.log(this.temp);
       if (res.params.status == 'SUCCESSFUL') {
         this.editedIssuerInfo = { ...this.issuerInfo };
       } else if (res.params.errmsg != '' && res.params.status == 'UNSUCCESSFUL') {

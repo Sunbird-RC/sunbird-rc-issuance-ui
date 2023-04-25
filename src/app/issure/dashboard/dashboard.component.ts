@@ -40,12 +40,33 @@ export class DashboardComponent implements OnInit {
   item: any;
   templatePath: any;
   entityName: any;
-  constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
-    private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
+  temp: any;
+  editedIssuerInfo: any;
+  isOpen: boolean = true;
+  modal: HTMLElement;
+  flag: boolean = false;
+  identifier: string;
 
+  constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
+    private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService, private route: ActivatedRoute) {
+
+  }
+  ngAfterViewChecked() {
+     (<HTMLInputElement>document.getElementById("formly_8_string_userId_0")).disabled = true; 
   }
 
   ngOnInit(): void {
+
+    // this.route.params.subscribe(params => {
+    //   this.form = params['form'].split('/', 1)[0];
+    //   this.identifier = params['form'].split('/', 1)[1];
+    // });
+    // if(localStorage.getItem('entity-osid')){
+    //   this.identifier = localStorage.getItem('entity-osid')
+    // }
+    // else{
+    //   console.log("Not Authorized")
+    // }
     this.getDocument();
     this.getIssuer();
 
@@ -69,7 +90,7 @@ export class DashboardComponent implements OnInit {
           this.definations = this.responseData.definitions;
           this.entityName = fieldset.definition;
           // this.property = this.definations[fieldset.definition].properties;
-         
+
         });
         this.schema["type"] = "object";
         this.schema["title"] = this.formSchema.title;
@@ -77,19 +98,24 @@ export class DashboardComponent implements OnInit {
         this.schema["properties"] = this.responseData.definitions[this.entityName].properties;
         this.schema["required"] = this.responseData.definitions[this.entityName].required;
         this.loadSchema();
+        // this.disableInputField();
+
       });
 
-    }, (error) => {
-      this.toastMsg.error('error', 'forms.json not found in src/assets/config/ - You can refer to examples folder to create the file')
-    })
+    }
+      ,
+       (error) => {
+        this.toastMsg.error('error', 'forms.json not found in src/assets/config/ - You can refer to examples folder to create the file')
+      }
+    )
   }
+
+
   loadSchema() {
     this.form2 = new FormGroup({});
     this.options = {};
     this.fields = [this.formlyJsonschema.toFieldConfig(this.schema)];
-
     this.schemaloaded = true;
-
   }
 
   checkProperty(fieldset) {
@@ -118,13 +144,35 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  disableInputField(): void {
+    const form = document.getElementById('myForm');
+    const labels = document.getElementsByTagName('label');
+    const labelArray = Array.from(labels);
+    for (const label of labelArray) {
+      if (label.textContent === ' Email Id or Mobile number ') {
+        const elements = document.getElementsByClassName('ng-pristine');
+        const inputClass = label.getAttribute('for');
+        const input = form.querySelector(`.${inputClass}`);
+
+        if (elements) {
+          this.flag = true;
+          elements['disabled'] = true;
+        } else {
+          console.log(`Input element with id "${inputClass}" not found.`);
+        }
+
+        break;
+      }
+    }
+  }
+
+
 
   getIssuer() {
     this.generalService.getData('Issuer').subscribe((res) => {
-      console.log(res);
       this.issuerInfo = res[0];
       this.model = res[0];
-      console.log(this.issuerInfo);
+      this.editedIssuerInfo = { ...this.issuerInfo };
     });
 
   }
@@ -142,17 +190,32 @@ export class DashboardComponent implements OnInit {
   openPreview() {
   }
 
+  closePops() {
+    this.isOpen = false;
+    this.modal = document.getElementById("prewiewProfile");
+    this.modal.style.display = "none";
+    const modalBackdrop = document.querySelector('.modal-backdrop.fade.show');
+    if (modalBackdrop) {
+      modalBackdrop.remove();
+    }
+  }
+
 
   submit() {
-    this.generalService.putData('/issuer', this.model['osid'], this.model).subscribe((res) => {
+    this.generalService.putData('/Issuer', this.model['osid'], this.model).subscribe((res) => {
+      this.temp = res;
+      console.log(this.temp);
       if (res.params.status == 'SUCCESSFUL') {
-        this.router.navigate(['/dashboard'])
-      }
-      else if (res.params.errmsg != '' && res.params.status == 'UNSUCCESSFUL') {
-        this.toastMsg.error('error', res.params.errmsg)
+        this.editedIssuerInfo = { ...this.issuerInfo };
+      } else if (res.params.errmsg != '' && res.params.status == 'UNSUCCESSFUL') {
+        this.toastMsg.error('error', res.params.errmsg);
       }
     }, (err) => {
-      this.toastMsg.error('error', err.error.params.errmsg)
+      this.toastMsg.error('error', err.error.params.errmsg);
+    }, () => {
+      this.closePops();
     });
   }
+
+
 }

@@ -418,6 +418,7 @@ var selectHideShowFormComponentConfig = [
 
 export const editorConfig = {
     disabled: [],
+    noDefaultSubmitButton: true,
     builder: {
         basic: {
             title: '',

@@ -94,6 +94,9 @@ export class AdvanceEditorComponent implements OnInit {
 
     this.propertyArr = [];
     let _self = this;
+
+    if(jsonSchema != undefined)
+    {
     Object.keys(jsonSchema).forEach(function (key) {
       let resultJson;
       _self.propertyArr.push(key);
@@ -110,9 +113,12 @@ export class AdvanceEditorComponent implements OnInit {
 
     });
 
-    for (let j = 0; j < jsonFields.definitions[this.jsonTitle].required.length; j++) {
-      this.options.disabled.push(jsonFields.definitions[this.jsonTitle].required[j]);
-    }
+    // for (let j = 0; j < jsonFields.definitions[this.jsonTitle].required.length; j++) {
+    //   this.options.disabled.push(jsonFields.definitions[this.jsonTitle].required[j]);
+    // }
+  }else{
+    this.myForm['components'] = [];
+  }
 
   }
 
@@ -236,13 +242,82 @@ export class AdvanceEditorComponent implements OnInit {
 
 
       this.jsonFields.definitions[this.jsonTitle].properties = tempField;
+      this.updateCredentialTemp();
 
 
       this.jsonEditor.set(this.jsonFields);
       // this.jsonEditor['_data']['_osConfig']['credentialTemplate'] = this.vcFields;
-      // this.newItemEvent.emit(this.jsonEditor);
+     //  this.newItemEvent.emit(this.jsonEditor);
 
     }
+  }
+
+  updateCredentialTemp()
+  {
+    let certTmpJson =  {};//this.vcFields['credentialSubject'];
+    certTmpJson['type'] = (this.vcFields['credentialSubject'].hasOwnProperty('type') && this.vcFields['credentialSubject'] != '') ? this.vcFields['credentialSubject']['type'] : this.jsonFields.title;
+
+   // certTmpJson['type'] =  this.jsonFields.title;
+
+      let _self = this;
+      let propertyData = this.jsonFields.definitions[this.jsonFields.title].properties;
+
+     
+
+      let contextJson = {}
+      //this.vcFields["@context"][1]["@context"];
+
+      contextJson[certTmpJson['type']] = {
+        "@id":"https://github.com/sunbird-specs/vc-specs#" + certTmpJson['type'],
+        "@context": { }
+      }
+
+      Object.keys(propertyData).forEach(function (key) {
+        console.log({ key });
+
+       
+        if(propertyData[key].type == 'string' || propertyData[key].type == 'number')
+        {
+          certTmpJson[key] = "{{" + key + "}}";
+          contextJson[certTmpJson['type']]['@context'][key] = "schema:Text";
+
+         
+        }else if(propertyData[key].type == 'object'){
+          let objPro = propertyData[key].properties;
+          Object.keys(objPro).forEach(function (key2) {
+            console.log({ key2 });
+
+            certTmpJson[key2] = "{{" + key + "." + key2 + "}}";
+          })
+        }
+       
+      });
+
+    
+      let tempjson =   this.vcFields
+      this.vcFields = { 
+        '@context' : [
+        "https://www.w3.org/2018/credentials/v1",
+        {    
+          '@context' : {
+            "@version": 1.1,
+            "@protected": true,
+          }
+        }
+      ],
+      "issuer": "did:web:sunbirdrc.dev/vc/skill",
+      "type": [
+        "VerifiableCredential"
+      ],
+      "issuanceDate": "2021-08-27T10:57:57.237Z",
+    };
+      this.vcFields['credentialSubject'] = certTmpJson;
+      this.vcFields["@context"][1]["@context"] = contextJson;
+
+      this.vcEditor.set(this.vcFields);
+   //   this.vcFields["@context"][1]["@context"] = contextJson;
+     // this.jsonFields._osConfig['credentialTemplate'] = this.vcFields;
+     // this.showJson('');
   }
 
   showJson(event) {

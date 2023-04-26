@@ -50,7 +50,10 @@ export class DashboardComponent implements OnInit {
 
   }
   ngAfterViewChecked() {
+    if(document.getElementById("formly_8_string_userId_0"))
+    {
      (<HTMLInputElement>document.getElementById("formly_8_string_userId_0")).disabled = true; 
+    }
   }
 
   ngOnInit(): void {

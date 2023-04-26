@@ -240,7 +240,9 @@ export class AdvanceEditorComponent implements OnInit {
 
 
       this.jsonFields.definitions[this.jsonTitle].properties = tempField;
-      this.updateCredentialTemp();
+      if(typeof(this.vcFields) == 'object'){
+        this.updateCredentialTemp();
+      }
 
       this.jsonEditor.set(this.jsonFields);
     }

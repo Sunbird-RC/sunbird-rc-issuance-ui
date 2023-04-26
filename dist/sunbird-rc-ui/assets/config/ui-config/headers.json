@@ -1,0 +1,59 @@
+{
+    "type": "opensaberLayoutSchema",
+    "version": "0.1",
+    "headers": [
+        {
+            "default":{
+                "right":[
+                    {
+                        "title": "Login",
+                        "redirectTo": "/login"
+                    }
+                   
+                ]
+            }
+        },
+        {
+            "plain":{
+                "right":[
+                    {
+                        "title": "LOGOUT",
+                        "redirectTo": "/logout",
+                        "className" : "font-weight-bold"
+                    }
+                ]
+            }
+        },
+        {
+            "issuer":{
+                "left":[
+                    {
+                        "title": "Home",
+                        "redirectTo": "/dashboard",
+                        "activeTab" : "active"
+                    },
+                    {
+                        "title": "Document",
+                        "redirectTo": "/records"
+                    }
+                ]
+            }
+        },
+        {
+            "records":{
+                "left":[
+                    {
+                        "title": "Home",
+                        "redirectTo": "/dashboard"
+                    },
+                    {
+                        "title": "Document",
+                        "redirectTo": "/records",
+                        "activeTab" : "active"
+                    }
+                ]
+            }
+        }
+       
+    ]
+}

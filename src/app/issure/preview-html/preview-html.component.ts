@@ -10,6 +10,8 @@ import 'grapesjs-preset-webpage';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { ToastMessageService } from 'src/app/services/toast-message/toast-message.service';
 import { SchemaService } from '../../services/data/schema.service';
+import * as newSchema from './newSchema.json';
+
 
 @Component({
   selector: 'app-preview-html',
@@ -21,7 +23,6 @@ export class PreviewHtmlComponent implements OnInit {
   public editorOptions: JsonEditorOptions;
   public data: any;
   @ViewChild(JsonEditorComponent, { static: false }) jsonEditor: JsonEditorComponent;
-  name1: string = 'pratik';
   sampleData: any;
   schemaContent: any;
   userJson: any;
@@ -71,11 +72,7 @@ export class PreviewHtmlComponent implements OnInit {
       this.issuerOsid = res[0].osid;
     });
 
-
-
-
   }
-
 
   async ngOnInit() {
 
@@ -178,8 +175,6 @@ export class PreviewHtmlComponent implements OnInit {
         run: function (editor) {
           if (editPanel == null) {
 
-
-
             const editMenuDiv = document.createElement('div');
 
             const arr = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'alpha', 'bravo', 'charlie', 'delta', 'echo', 'alpha', 'bravo', 'charlie', 'delta', 'echo'];
@@ -216,12 +211,7 @@ export class PreviewHtmlComponent implements OnInit {
               cardBContainer.appendChild(cardBdiv);		// append li to ul.
             }
 
-
-
             editMenuDiv.appendChild(cardDiv);
-
-
-
             const panels = pn.getPanel('views-container')
             panels.set('appendContent', editMenuDiv).trigger('change:appendContent')
             editPanel = editMenuDiv;
@@ -237,8 +227,6 @@ export class PreviewHtmlComponent implements OnInit {
             };
           }
           editPanel.style.display = 'block';
-
-
 
         },
         stop: function (editor) {
@@ -329,7 +317,6 @@ export class PreviewHtmlComponent implements OnInit {
   }
 
   cancel() {
-    // this.isPreview = false;
     localStorage.setItem('sampleData', '');
     this.router.navigate(['/dashboard']);
   }
@@ -337,16 +324,16 @@ export class PreviewHtmlComponent implements OnInit {
   async readHtmlSchemaContent(doc) {
 
     this.userHtml = '';
+  if(!doc.hasOwnProperty('htmlContent') && !doc.htmlContent ){
     await fetch(doc.schemaUrl)
       .then(response => response.text())
       .then(data => {
-        //    this.schemaContent = data;
-        // console.log({ data });
+           this.schemaContent = data;
         data = JSON.parse(data);
         this.certificateTitle = data['title'];
+        this.templateName = this.certificateTitle;
         this.userJson = data;
         this.addCrtTemplateFields();
-        // this.certificateTemplate = this.userJson['_osConfig']['credentialTemplate'];
         this.getCrtTempFields(this.userJson);
       });
 
@@ -354,9 +341,16 @@ export class PreviewHtmlComponent implements OnInit {
       .then(response => response.text())
       .then(data => {
         this.userHtml = data;
-
-        //   this.injectHTML();
       });
+    }else{
+      this.userHtml = doc.htmlContent;
+      this.certificateTitle = 'newSchema';
+      this.userJson = newSchema.default;
+      console.log({newSchema});
+
+    }
+
+   
   }
 
 
@@ -367,9 +361,7 @@ export class PreviewHtmlComponent implements OnInit {
     fetch(url)
       .then(response => response.text())
       .then(data => {
-        //    this.schemaContent = data;
         console.log({ data });
-        //  console.log(JSON.parse(data));
       });
 
   }
@@ -405,6 +397,7 @@ export class PreviewHtmlComponent implements OnInit {
     }
     });
 
+   this.addCrtTemplateFields();
     this.grapesJSDefine();
 
   }
@@ -422,15 +415,17 @@ export class PreviewHtmlComponent implements OnInit {
   }
 
   addCrtTemplateFields() {
-    let certTmpJson = (this.schemaContent) ? this.schemaContent : this.userJson;
-    certTmpJson = certTmpJson['_osConfig']['credentialTemplate'];
-    if (typeof (certTmpJson) == 'string') { 
+    this.schemaContent = (this.schemaContent && (typeof(this.sampleData) != 'object')) ? JSON.parse(this.schemaContent) : this.userJson;
+
+    let certTmpJson = (this.schemaContent && this.schemaContent != "") ? this.schemaContent : this.userJson;
+    certTmpJson = (certTmpJson['_osConfig'].hasOwnProperty('credentialTemplate')) ? certTmpJson['_osConfig']['credentialTemplate'] : '';
+    if (typeof (certTmpJson) == 'string' && certTmpJson != "") {
       let jsonUrl = certTmpJson;
 
       fetch(jsonUrl)
       .then(response => response.text())
       .then(data => {
-        //    this.schemaContent = data;
+            this.schemaContent = data;
         console.log({ data });
          // console.log(JSON.parse(data));
       });
@@ -438,13 +433,39 @@ export class PreviewHtmlComponent implements OnInit {
 
     } else {
 
-      certTmpJson = certTmpJson['credentialSubject'];
-      console.log(certTmpJson['credentialSubject']);
+      certTmpJson = (certTmpJson != '')? certTmpJson['credentialSubject'] : {};
+      certTmpJson['type'] = (certTmpJson.hasOwnProperty('type') && certTmpJson != '') ? certTmpJson['type'] : this.schemaContent.title;
 
       if (this.schemaContent) {
         let _self = this;
         let propertyData = this.schemaContent.definitions[this.certificateTitle].properties;
+
+        if(!this.schemaContent._osConfig.hasOwnProperty('credentialTemplate'))
+        {
+          this.schemaContent._osConfig = {
+            'credentialTemplate' : {
+              '@context' : [
+                "https://www.w3.org/2018/credentials/v1",
+                {    
+                  '@context' : {
+                    "@version": 1.1,
+                    "@protected": true,
+                  }
+                }
+              ]
+            }
+          }
+        }
+
         let contextJson = this.schemaContent._osConfig.credentialTemplate["@context"][1]["@context"];
+
+        contextJson[certTmpJson['type']] = {
+          "@id":"https://github.com/sunbird-specs/vc-specs#" + certTmpJson['type'],
+          "@context": {
+            "name":"schema:Text"
+          }
+        }
+
         Object.keys(propertyData).forEach(function (key) {
           console.log({ key });
 
@@ -453,13 +474,9 @@ export class PreviewHtmlComponent implements OnInit {
           if(propertyData[key].type == 'string' || propertyData[key].type == 'number')
           {
             certTmpJson[key] = "{{" + key + "}}";
+            contextJson[certTmpJson['type']]['@context'][key] = "schema:Text";
 
-            contextJson[key] = {
-              "@id":"https://github.com/sunbird-specs/vc-specs#" + key,
-              "@context": {
-                "name":"schema:Text"
-              }
-            }
+           
           }else if(propertyData[key].type == 'object'){
             let objPro = propertyData[key].properties;
             Object.keys(objPro).forEach(function (key2) {
@@ -473,16 +490,13 @@ export class PreviewHtmlComponent implements OnInit {
 
         this.schemaContent['_osConfig']['credentialTemplate']['credentialSubject'] = certTmpJson;
         this.schemaContent._osConfig.credentialTemplate["@context"][1]["@context"] = contextJson;
+        this.userJson = this.schemaContent;
       }
     }
   }
 
   async submit() {
-   // this.addCrtTemplateFields();
-  
-    // this.schemaContent = this.jsonEditor.get();//JSON.stringify(this.userJson);
     this.schemaContent = (this.schemaContent) ? this.schemaContent : this.userJson;
-   // this.schemaContent = await this.addCrtTemplateFields();
 
     var htmlWithCss = this.editor.runCommand('gjs-get-inlined-html');
 

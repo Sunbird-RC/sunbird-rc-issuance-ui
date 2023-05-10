@@ -273,8 +273,8 @@ export class AdvanceEditorComponent implements OnInit {
         let objPro = propertyData[key].properties;
         Object.keys(objPro).forEach(function (key2) {
           console.log({ key2 });
-
           certTmpJson[key2] = "{{" + key + "." + key2 + "}}";
+          contextJson[certTmpJson['type']]['@context'][key2] = "schema:Text";
         })
       }
 
@@ -344,17 +344,27 @@ export class AdvanceEditorComponent implements OnInit {
         }
 
       } if (element.type == 'select') {
+
+        let enumArr = [];
+
+        for(let i = 0; i<  element['data']['values'].length; i++)
+        {
+            enumArr.push( element['data']['values'][i]['label'])
+        }
+
         tempFjson[element.key] = {
           "type": "string",
           "title": element.label,
-          "widget": {
-            "formlyConfig": {
-              "type": "enum",
-              "templateOptions": {
-                "options": element['data']['values']
-              }
-            }
-          }
+          "enum" : enumArr,
+          "fieldType": "select"
+          // "widget": {
+          //   "formlyConfig": {
+          //     "type": "enum",
+          //     "templateOptions": {
+          //       "options": element['data']['values']
+          //     }
+          //   }
+          // }
         }
         console.log({ tempFjson });
       }

@@ -19,7 +19,7 @@ import * as newSchema from './newSchema.json';
   styleUrls: ['./preview-html.component.scss']
 })
 export class PreviewHtmlComponent implements OnInit {
-
+  
   public editorOptions: JsonEditorOptions;
   public data: any;
   @ViewChild(JsonEditorComponent, { static: false }) jsonEditor: JsonEditorComponent;
@@ -45,9 +45,9 @@ export class PreviewHtmlComponent implements OnInit {
   certificateTitle: any;
   propertyArr: any = [];
 
+
   constructor(public router: Router, public route: ActivatedRoute, public toastMsg: ToastMessageService,
     public generalService: GeneralService, public schemaService: SchemaService) {
-
     this.editorOptions = new JsonEditorOptions()
     // this.editorOptions.modes = ['code']; // set all allowed modes
 
@@ -75,7 +75,6 @@ export class PreviewHtmlComponent implements OnInit {
   }
 
   async ngOnInit() {
-
     await this.readHtmlSchemaContent(this.sampleData);
     this.grapesJSDefine();
     /* ------END-------------------------Advance Editor ----------------------- */
@@ -85,6 +84,7 @@ export class PreviewHtmlComponent implements OnInit {
 
   grapesJSDefine()
   {
+    
     this.editor = this.initializeEditor();
     this.editor.on('load', () => {
       var panelManager = this.editor.Panels;
@@ -306,9 +306,13 @@ export class PreviewHtmlComponent implements OnInit {
     window.location.reload();
   }
 
+async goTpCertificatePg()  {
+  await  this.router.navigateByUrl('/certificate');
+  window.location.reload();
+  }
+
   back() {
     history.back();    //this.router.navigate(['/certificate']);
-    this.editor.runCommand('core:canvas-clear')
   }
 
   backToHtmlEditor() {
@@ -331,7 +335,7 @@ export class PreviewHtmlComponent implements OnInit {
            this.schemaContent = data;
         data = JSON.parse(data);
         this.certificateTitle = data['title'];
-        this.templateName = this.certificateTitle;
+      //  this.templateName = this.certificateTitle;
         this.userJson = data;
         this.addCrtTemplateFields();
         this.getCrtTempFields(this.userJson);
@@ -345,8 +349,9 @@ export class PreviewHtmlComponent implements OnInit {
     }else{
       this.userHtml = doc.htmlContent;
       this.certificateTitle = 'newSchema';
+    //  this.templateName = this.certificateTitle;
       this.userJson = newSchema.default;
-      console.log({newSchema});
+      console.log(newSchema);
 
     }
 
@@ -425,7 +430,9 @@ export class PreviewHtmlComponent implements OnInit {
       fetch(jsonUrl)
       .then(response => response.text())
       .then(data => {
-            this.schemaContent = data;
+        this.schemaContent['_osConfig']['credentialTemplate'] = data;
+
+           // this.schemaContent = data;
         console.log({ data });
          // console.log(JSON.parse(data));
       });
@@ -480,9 +487,9 @@ export class PreviewHtmlComponent implements OnInit {
           }else if(propertyData[key].type == 'object'){
             let objPro = propertyData[key].properties;
             Object.keys(objPro).forEach(function (key2) {
-              console.log({ key2 });
-
               certTmpJson[key2] = "{{" + key + "." + key2 + "}}";
+              contextJson[certTmpJson['type']]['@context'][key2] = "schema:Text";
+
             })
           }
           }
@@ -496,7 +503,7 @@ export class PreviewHtmlComponent implements OnInit {
   }
 
   async submit() {
-    this.schemaContent = (this.schemaContent) ? this.schemaContent : this.userJson;
+    this.schemaContent = (this.schemaContent && typeof(this.schemaContent) != 'string') ? this.schemaContent : this.userJson;
 
     var htmlWithCss = this.editor.runCommand('gjs-get-inlined-html');
 
@@ -577,6 +584,11 @@ export class PreviewHtmlComponent implements OnInit {
     this.getCrtTempFields(this.schemaContent);
     this.schemaDiv = false;
     this.htmlDiv = true;
+  }
+
+  ngOnDestroy()
+  {
+    this.editor.runCommand('core:canvas-clear');
   }
 
 

@@ -146,7 +146,7 @@ export class AddRecordsComponent implements OnInit {
     // }
 
     if (fieldObj.templateOptions['type'] == 'enum' || fieldObj.templateOptions.hasOwnProperty('options')) {
-      tempObj['type'] = 'select';
+      tempObj['type'] = (requiredF.properties.hasOwnProperty(fieldObj.key) && requiredF.properties[fieldObj.key].hasOwnProperty('fieldType')) ? requiredF.properties[fieldObj.key]['fieldType']: 'select';
       tempObj['templateOptions']['options'] = fieldObj.templateOptions.options;
     }
 
@@ -160,6 +160,11 @@ export class AddRecordsComponent implements OnInit {
 
     if (fieldObj['type'] == 'string' || fieldObj['type'] == 'number') {
       tempObj['type'] = 'input';
+    }
+
+    if( fieldObj['key'] == 'number')
+    {
+      tempObj['templateOptions']['type'] = 'number';
     }
 
     return tempObj;

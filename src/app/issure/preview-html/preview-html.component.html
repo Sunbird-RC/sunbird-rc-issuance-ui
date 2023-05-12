@@ -19,7 +19,7 @@
             <div class="preview-footer">
                 <!-- <button class="btn btn-sec-bg submit-button mx-3">Preview on email</button> -->
                 <!-- <button (click)="cancel()" class="btn btn-sec-bg submit-button">Preview on eLocker</button> -->
-                <button data-toggle="modal" [hidden]="schemaDiv" [disabled]="!propertyArr.length" data-target="#prewiewProfile" 
+                <button data-toggle="modal" [hidden]="schemaDiv" (click)="showPopup()"
                     class="btn text-capitalize float-end btn-primary btn-primary-sm p1">Save Document</button>
             </div>
             <div class=" p-0 setHeight border-right mtn-28">
@@ -47,13 +47,10 @@
             </div>
         </div>
 
-        <div>
-
-
-            <div class="modal right fade" id="prewiewProfile" tabindex="-1" role="dialog"
-                aria-labelledby="prewiewProfile">
+            <div class="modal right fade" id="saveDocumentData" tabindex="-1" role="dialog"
+                aria-labelledby="saveDocumentData">
                 <div class="modal-dialog" role="document">
-                    <div class="modal-content">
+                    <div class="modal-content" *ngIf="propertyArr.length && iscredentialSubAdd">
                         <div class="modal-header pt-4 border-0">
                             <h3 class="heading-5">Save Document</h3>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -83,10 +80,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal-content" *ngIf="!propertyArr.length || !iscredentialSubAdd">
+                        <div class="modal-body text-center">
+                        <div class="container mt-4">
+                            <h3 class="heading-5 mb-4">Properties of schema not added</h3>
+                           <h5 class="p16 lh-lg" >Please add properties using advance editor and add them in the certificate</h5>
+                            <div class="mt-4">
+                                <button (click)="editTemplate()" data-dismiss="modal" aria-label="Close"
+                                    class="btn text-capitalize btn-primary btn-primary-sm p1">OK</button>
+                              </div>
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-        </div>
     </div>
+
+
 
 </div>

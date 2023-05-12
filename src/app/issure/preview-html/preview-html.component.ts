@@ -44,6 +44,7 @@ export class PreviewHtmlComponent implements OnInit {
   certificateProperties: any;
   certificateTitle: any;
   propertyArr: any = [];
+  iscredentialSubAdd: boolean;
 
 
   constructor(public router: Router, public route: ActivatedRoute, public toastMsg: ToastMessageService,
@@ -557,7 +558,25 @@ async goTpCertificatePg()  {
 
   }
 
+  showPopup()
+  {
+    var htmlWithCss = this.editor.runCommand('gjs-get-inlined-html');
 
+    var parser = new DOMParser();
+    var htmlDoc = parser.parseFromString(htmlWithCss, 'text/html');
+    this.userHtml = htmlDoc.documentElement.innerHTML
+
+    this.iscredentialSubAdd = this.userHtml.includes('credentialSubject');
+
+  var button = document.createElement("button");
+  button.setAttribute('data-toggle', 'modal');
+  button.setAttribute('data-target', `#saveDocumentData`);
+  document.body.appendChild(button)
+  button.click();
+  button.remove();
+  
+  }
+  
   injectHTML() {
 
     const iframe: HTMLIFrameElement = document.getElementById('iframe2') as HTMLIFrameElement;

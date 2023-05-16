@@ -3,6 +3,11 @@
     "version": "0.1",
     "headers": [
         {
+            "plain":{
+               
+            }
+        },
+        {
             "default":{
                 "right":[
                     {
@@ -10,17 +15,6 @@
                         "redirectTo": "/login"
                     }
                    
-                ]
-            }
-        },
-        {
-            "plain":{
-                "right":[
-                    {
-                        "title": "LOGOUT",
-                        "redirectTo": "/logout",
-                        "className" : "font-weight-bold"
-                    }
                 ]
             }
         },

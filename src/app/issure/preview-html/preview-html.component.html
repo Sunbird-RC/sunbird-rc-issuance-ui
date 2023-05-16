@@ -86,7 +86,10 @@
                             <h3 class="heading-5 mb-4">Properties of schema not added</h3>
                            <h5 class="p16 lh-lg" >Please add properties using advance editor and add them in the certificate</h5>
                             <div class="mt-4">
-                                <button (click)="editTemplate()" data-dismiss="modal" aria-label="Close"
+                                <button *ngIf="!propertyArr.length" (click)="editTemplate()" data-dismiss="modal" aria-label="Close"
+                                    class="btn text-capitalize btn-primary btn-primary-sm p1">OK</button>
+
+                                    <button *ngIf="propertyArr.length && !iscredentialSubAdd"  data-dismiss="modal" aria-label="Close"
                                     class="btn text-capitalize btn-primary btn-primary-sm p1">OK</button>
                               </div>
                         </div>

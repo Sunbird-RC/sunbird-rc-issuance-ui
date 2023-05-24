@@ -44,16 +44,12 @@ export class DashboardComponent implements OnInit {
   editedIssuerInfo: any;
   isOpen: boolean = true;
   modal: HTMLElement;
+  fieldName: string | number | string[];
+  fieldKey: any;
 
   constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
     private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
 
-  }
-  ngAfterViewChecked() {
-    if(document.getElementById("formly_8_string_userId_0"))
-    {
-     (<HTMLInputElement>document.getElementById("formly_8_string_userId_0")).disabled = true; 
-    }
   }
 
   ngOnInit(): void {
@@ -79,7 +75,7 @@ export class DashboardComponent implements OnInit {
           this.checkProperty(fieldset);
           this.definations = this.responseData.definitions;
           this.entityName = fieldset.definition;
-          // this.property = this.definations[fieldset.definition].properties;
+          this.property = this.definations[fieldset.definition].properties;
 
         });
         this.schema["type"] = "object";
@@ -104,8 +100,27 @@ export class DashboardComponent implements OnInit {
     this.options = {};
     this.fields = [this.formlyJsonschema.toFieldConfig(this.schema)];
     this.schemaloaded = true;
+    let tempFields = [];
+
+    this.fields[0].fieldGroup.forEach((fieldObj, index) => {
+     this.fieldName = fieldObj.key;
+     tempFields[index] = this.formBuildingSingleField(fieldObj, this.fields[0].fieldGroup[index], this.schema);
+
+    })
   }
 
+  formBuildingSingleField(fieldObj, fieldSchena, requiredF) {
+    this.fieldKey = fieldObj.key;
+    let tempObj = fieldSchena;
+    
+  if(this.property[this.fieldKey]['title'].includes('Account')){
+    this.property[this.fieldKey]["disabled"] = true;
+    if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('disabled')) {
+      tempObj['templateOptions']['disabled'] = this.property[this.fieldKey].disabled;     
+    }
+  }
+    return tempObj;
+  } 
   checkProperty(fieldset) {
     //  this.definations[fieldset.definition] = this.responseData.definitions[fieldset.definition];
     var ref_properties = {}

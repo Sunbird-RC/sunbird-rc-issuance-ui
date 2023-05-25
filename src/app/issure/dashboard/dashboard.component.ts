@@ -140,7 +140,6 @@ export class DashboardComponent implements OnInit {
 
   getIssuer() {
     this.generalService.getData('Issuer').subscribe((res) => {
-      console.log(res);
       this.issuerInfo = res[0];
       this.model = res[0];
       this.editedIssuerInfo = { ...this.issuerInfo };
@@ -153,12 +152,8 @@ export class DashboardComponent implements OnInit {
       "filters": {}
     }
     this.generalService.getData('Schema').subscribe((res) => {
-      console.log(res);
       this.templatesItems = res;
     });
-  }
-
-  openPreview() {
   }
 
     closePops() {

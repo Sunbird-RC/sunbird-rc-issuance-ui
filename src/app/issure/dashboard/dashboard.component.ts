@@ -44,8 +44,7 @@ export class DashboardComponent implements OnInit {
   editedIssuerInfo: any;
   isOpen: boolean = true;
   modal: HTMLElement;
-  fieldName: string | number | string[];
-  fieldKey: any;
+  res: any;
 
   constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
     private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
@@ -72,10 +71,10 @@ export class DashboardComponent implements OnInit {
         this.responseData = res;
         this.formSchema.fieldsets.forEach(fieldset => {
 
-          this.checkProperty(fieldset);
           this.definations = this.responseData.definitions;
           this.entityName = fieldset.definition;
           this.property = this.definations[fieldset.definition].properties;
+          this.checkProperty(fieldset);
 
         });
         this.schema["type"] = "object";
@@ -94,40 +93,20 @@ export class DashboardComponent implements OnInit {
     )
   }
 
-
   loadSchema() {
     this.form2 = new FormGroup({});
     this.options = {};
     this.fields = [this.formlyJsonschema.toFieldConfig(this.schema)];
     this.schemaloaded = true;
-    let tempFields = [];
-
-    this.fields[0].fieldGroup.forEach((fieldObj, index) => {
-     this.fieldName = fieldObj.key;
-     tempFields[index] = this.formBuildingSingleField(fieldObj, this.fields[0].fieldGroup[index], this.schema);
-
-    })
   }
 
-  formBuildingSingleField(fieldObj, fieldSchena, requiredF) {
-    this.fieldKey = fieldObj.key;
-    let tempObj = fieldSchena;
-    
-  if(this.property[this.fieldKey]['title'].includes('Account')){
-    this.property[this.fieldKey]["disabled"] = true;
-    if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('disabled')) {
-      tempObj['templateOptions']['disabled'] = this.property[this.fieldKey].disabled;     
-    }
-  }
-    return tempObj;
-  } 
   checkProperty(fieldset) {
-    //  this.definations[fieldset.definition] = this.responseData.definitions[fieldset.definition];
+   //this.definations[fieldset.definition] = this.responseData.definitions[fieldset.definition];
     var ref_properties = {}
     var ref_required = []
     if (fieldset.fields && fieldset.fields.length > 0) {
       fieldset.fields.forEach(reffield => {
-
+        this.addWidget(fieldset.children, reffield, fieldset.name);
         if (reffield.required) {
           ref_required.push(reffield.name)
         }
@@ -147,8 +126,21 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  addWidget(fieldset, field, childrenName) {
+    if (field.disabled) {
+      this.property[field.name]['widget'] = {
+        "formlyConfig": {
+          "templateOptions": {}
+        }
+      }
+      this.property[field.name]['widget']['formlyConfig']['templateOptions']['disabled'] = field.disabled;
+    }
+     
+  }
+
   getIssuer() {
     this.generalService.getData('Issuer').subscribe((res) => {
+      console.log(res);
       this.issuerInfo = res[0];
       this.model = res[0];
       this.editedIssuerInfo = { ...this.issuerInfo };
@@ -169,7 +161,7 @@ export class DashboardComponent implements OnInit {
   openPreview() {
   }
 
-  closePops() {
+    closePops() {
     this.isOpen = false;
     this.modal = document.getElementById("prewiewProfile");
     this.modal.style.display = "none";

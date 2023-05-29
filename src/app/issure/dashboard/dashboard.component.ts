@@ -44,16 +44,11 @@ export class DashboardComponent implements OnInit {
   editedIssuerInfo: any;
   isOpen: boolean = true;
   modal: HTMLElement;
+  res: any;
 
   constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
     private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
 
-  }
-  ngAfterViewChecked() {
-    if(document.getElementById("formly_8_string_userId_0"))
-    {
-     (<HTMLInputElement>document.getElementById("formly_8_string_userId_0")).disabled = true; 
-    }
   }
 
   ngOnInit(): void {
@@ -76,10 +71,10 @@ export class DashboardComponent implements OnInit {
         this.responseData = res;
         this.formSchema.fieldsets.forEach(fieldset => {
 
-          this.checkProperty(fieldset);
           this.definations = this.responseData.definitions;
           this.entityName = fieldset.definition;
-          // this.property = this.definations[fieldset.definition].properties;
+          this.property = this.definations[fieldset.definition].properties;
+          this.checkProperty(fieldset);
 
         });
         this.schema["type"] = "object";
@@ -98,7 +93,6 @@ export class DashboardComponent implements OnInit {
     )
   }
 
-
   loadSchema() {
     this.form2 = new FormGroup({});
     this.options = {};
@@ -107,30 +101,37 @@ export class DashboardComponent implements OnInit {
   }
 
   checkProperty(fieldset) {
-    //  this.definations[fieldset.definition] = this.responseData.definitions[fieldset.definition];
+   //this.definations[fieldset.definition] = this.responseData.definitions[fieldset.definition];
     var ref_properties = {}
     var ref_required = []
     if (fieldset.fields && fieldset.fields.length > 0) {
       fieldset.fields.forEach(reffield => {
-
+        if (reffield.disabled) {
+          this.addWidget(reffield);  
+        }
         if (reffield.required) {
           ref_required.push(reffield.name)
         }
 
         ref_properties[reffield.name] = this.responseData.definitions[fieldset.definition].properties[reffield.name];
       });
-
-      // if (this.responseData.definitions[fieldset.definition].properties.hasOwnProperty(reffield.name)) {
-      //   this.responseData.definitions[fieldset.definition].properties[reffield.name].properties = ref_properties;
-      // } else {
-      //   this.responseData.definitions[fieldset.definition].properties = ref_properties;
-
-      // }
       this.responseData.definitions[fieldset.definition].properties = ref_properties;
       this.responseData.definitions[fieldset.definition].required = ref_required;
     }
 
   }
+
+ 
+  addWidget(field) {   
+      this.property[field.name]['widget'] = {
+        "formlyConfig": {
+          "templateOptions": {}
+        }
+      }
+      this.property[field.name]['widget']['formlyConfig']['templateOptions']['disabled'] = field.disabled;
+    }
+     
+  
 
   getIssuer() {
     this.generalService.getData('Issuer').subscribe((res) => {
@@ -146,15 +147,11 @@ export class DashboardComponent implements OnInit {
       "filters": {}
     }
     this.generalService.getData('Schema').subscribe((res) => {
-      console.log(res);
       this.templatesItems = res;
     });
   }
 
-  openPreview() {
-  }
-
-  closePops() {
+    closePops() {
     this.isOpen = false;
     this.modal = document.getElementById("prewiewProfile");
     this.modal.style.display = "none";

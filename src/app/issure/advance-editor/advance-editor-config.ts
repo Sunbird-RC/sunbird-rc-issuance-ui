@@ -150,10 +150,7 @@ var editTextfieldCompValidation = [
         "key": "validateOn",
         "ignore": true
     },
-    {
-        "key": "unique",
-        "ignore": true
-    },
+   
     {
         "key": "validate.minLength",
         "ignore": true
@@ -383,6 +380,21 @@ var hideShowFormComponentConfig = [
         "key": "validation",
         "ignore": false,
         "components": editTextfieldCompValidation
+    },
+    {
+        "key": "conditional",
+        "ignore": false,
+        "components": editTextfieldConditionalTabs
+    },
+    {
+        "key": "logic",
+        "ignore": false,
+        "components": editTextfieldLogicTabs
+    },
+    {
+        "key": "logic",
+        "ignore": false,
+        "components": editTextfieldLayoutTabs
     },
     editTextfieldApiTabs,
     editTextfieldDataTabs,

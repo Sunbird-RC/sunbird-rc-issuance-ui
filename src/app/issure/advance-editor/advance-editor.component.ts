@@ -333,6 +333,10 @@ export class AdvanceEditorComponent implements OnInit {
       if (element.hasOwnProperty('validate') && element.validate.required == true) {
         this.jsonFields.definitions[this.jsonTitle].required.push(element.key);
       }
+      if (element.hasOwnProperty('unique') && element.unique == true) {
+        this.jsonFields["_osConfig"]["uniqueIndexFields"].push(element.key);
+      //  this.jsonFields["status"] = "PUBLISHED"
+      }
 
       if (element.type == 'container') {
 

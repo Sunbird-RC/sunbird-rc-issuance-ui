@@ -3,11 +3,6 @@
     "version": "0.1",
     "headers": [
         {
-            "plain":{
-               
-            }
-        },
-        {
             "default":{
                 "right":[
                     {

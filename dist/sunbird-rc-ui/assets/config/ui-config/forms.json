@@ -98,7 +98,8 @@
                                 "required": true
                             },
                             {
-                                "name": "accountDetails"
+                                "name": "accountDetails",
+                                "disabled":true
                             },
                             {
                                 "name": "contactDetails"

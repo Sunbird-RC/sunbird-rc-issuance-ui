@@ -541,7 +541,8 @@ async goTpCertificatePg()  {
       let payload = {
         "name": this.templateName,
         "description": this.description,
-        "schema": result
+        "schema": result,
+        "status":"PUBLISHED"  
       }
 
       if (res.documentLocations[0]) {

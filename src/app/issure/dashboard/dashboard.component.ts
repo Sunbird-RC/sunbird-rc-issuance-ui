@@ -106,28 +106,23 @@ export class DashboardComponent implements OnInit {
     var ref_required = []
     if (fieldset.fields && fieldset.fields.length > 0) {
       fieldset.fields.forEach(reffield => {
-        this.addWidget(fieldset.children, reffield, fieldset.name);
+        if (reffield.disabled) {
+          this.addWidget(reffield);  
+        }
         if (reffield.required) {
           ref_required.push(reffield.name)
         }
 
         ref_properties[reffield.name] = this.responseData.definitions[fieldset.definition].properties[reffield.name];
       });
-
-      // if (this.responseData.definitions[fieldset.definition].properties.hasOwnProperty(reffield.name)) {
-      //   this.responseData.definitions[fieldset.definition].properties[reffield.name].properties = ref_properties;
-      // } else {
-      //   this.responseData.definitions[fieldset.definition].properties = ref_properties;
-
-      // }
       this.responseData.definitions[fieldset.definition].properties = ref_properties;
       this.responseData.definitions[fieldset.definition].required = ref_required;
     }
 
   }
 
-  addWidget(fieldset, field, childrenName) {
-    if (field.disabled) {
+ 
+  addWidget(field) {   
       this.property[field.name]['widget'] = {
         "formlyConfig": {
           "templateOptions": {}
@@ -136,7 +131,7 @@ export class DashboardComponent implements OnInit {
       this.property[field.name]['widget']['formlyConfig']['templateOptions']['disabled'] = field.disabled;
     }
      
-  }
+  
 
   getIssuer() {
     this.generalService.getData('Issuer').subscribe((res) => {

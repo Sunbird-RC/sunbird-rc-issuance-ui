@@ -120,10 +120,6 @@ export function patternValidatorMessage(error: any, field: FormlyFieldConfig) {
   return `Please enter a valid ${field.templateOptions.label}`;
 }
 
-export function customErrorMessage(error: any, field: FormlyFieldConfig) {
-  return `${field.templateOptions.customMessage}`;
-}
-
 function initConfig(config: AppConfig) {
   return () => config.load()
 }

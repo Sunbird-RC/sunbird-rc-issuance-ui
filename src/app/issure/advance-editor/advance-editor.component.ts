@@ -328,9 +328,6 @@ export class AdvanceEditorComponent implements OnInit {
         if (element.type == 'container') {
           jsonDefination.properties[element.key] = { 'type': 'object' };
         }
-        // else{
-        //   jsonDefination.properties[element.key] = {}
-        // }
       }
 
       tempFjson[element.key] = this.signleFieldData(element);
@@ -349,10 +346,6 @@ export class AdvanceEditorComponent implements OnInit {
       if (element.hasOwnProperty('validate') && element.validate.maxLength) {
         tempFjson[element.key].maxLength = element.validate.maxLength;
       }
-
-      // if (element.hasOwnProperty('validate') && element.validate.customMessage) {
-      //   this.jsonFields.definitions[this.jsonTitle].properties[element.key].customMessage = element.validate.customMessage;
-      // }
 
       if (element.type == 'container') {
 
@@ -394,9 +387,6 @@ export class AdvanceEditorComponent implements OnInit {
           "title": element.label,
           "default": false
         }
-        // if (element.validate && element.validate.customMessage) {
-        //   tempFjson[element.key].customMessage = element.validate.customMessage;
-        // }
       } if (element.type == 'selectboxes') {
         tempFjson[element.key] = {
           type: 'select',
@@ -415,9 +405,6 @@ export class AdvanceEditorComponent implements OnInit {
           //   }
           // }
         }
-        // if (element.validate && element.validate.customMessage) {
-        //   tempFjson[element.key].customMessage = element.validate.customMessage;
-        // }
       } if (element.type == 'radio') {
         /*  tempFjson[element.key] = {
             "type": "radio",

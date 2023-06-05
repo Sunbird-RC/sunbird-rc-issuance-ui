@@ -161,10 +161,6 @@ export class AddRecordsComponent implements OnInit {
       tempObj['templateOptions']['placeholder'] = this.property[this.fieldKey].placeholder;
     }
 
-    if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('minLength')) {
-      tempObj['templateOptions']['minLength'] = this.property[this.fieldKey].minLength;
-    }
-
     if (fieldObj['type'] == 'string' || fieldObj['type'] == 'number') {
       tempObj['type'] = 'input';
     }

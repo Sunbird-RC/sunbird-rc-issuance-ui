@@ -116,6 +116,9 @@ export class AddRecordsComponent implements OnInit {
     this.fieldKey = fieldObj.key;
     let tempObj = fieldSchena;
 
+    if(this.schema["properties"][this.fieldKey].hasOwnProperty('customMessage')){
+      fieldObj['templateOptions']['customMessage'] = this.schema["properties"][this.fieldKey]['customMessage']
+    }
     if (!fieldObj['templateOptions'].hasOwnProperty('label') || fieldObj.templateOptions.label == undefined) {
       // let str: any = (fieldObj.templateOptions.label) ? fieldObj.templateOptions.label : fieldObj.key;
 
@@ -156,6 +159,10 @@ export class AddRecordsComponent implements OnInit {
 
     if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('placeholder')) {
       tempObj['templateOptions']['placeholder'] = this.property[this.fieldKey].placeholder;
+    }
+
+    if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('minLength')) {
+      tempObj['templateOptions']['minLength'] = this.property[this.fieldKey].minLength;
     }
 
     if (fieldObj['type'] == 'string' || fieldObj['type'] == 'number') {

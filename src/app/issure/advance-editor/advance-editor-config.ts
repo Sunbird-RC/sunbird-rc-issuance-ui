@@ -150,15 +150,6 @@ var editTextfieldCompValidation = [
         "key": "validateOn",
         "ignore": true
     },
-   
-    {
-        "key": "validate.minLength",
-        "ignore": true
-    },
-    {
-        "key": "validate.maxLength",
-        "ignore": true
-    },
     {
         "key": "validate.minWords",
         "ignore": true
@@ -173,10 +164,6 @@ var editTextfieldCompValidation = [
     },
     {
         "key": "errorLabel",
-        "ignore": true
-    },
-    {
-        "key": "validate.customMessage",
         "ignore": true
     },
     {

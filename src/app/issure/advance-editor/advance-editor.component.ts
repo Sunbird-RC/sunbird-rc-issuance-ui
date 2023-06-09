@@ -315,6 +315,20 @@ export class AdvanceEditorComponent implements OnInit {
     this.newItemEvent.emit(this.jsonEditor);
   }
 
+  checkValidate(element, tempFjson){
+    if (element.hasOwnProperty('validate') && element.validate.minLength) {
+      tempFjson[element.key].minLength = element.validate.minLength;
+    }
+
+    if (element.hasOwnProperty('validate') && element.validate.maxLength) {
+      tempFjson[element.key].maxLength = element.validate.maxLength;
+    }
+    if(element.hasOwnProperty('validate') && element.validate.customMessage){
+         tempFjson[element.key]['customMessage'] = element.validate.customMessage
+      }
+    return tempFjson;
+  } 
+
   formioJsonToPlainJSONSchema(event, components, jsonDefination) {
     let tempFjson = {};
 
@@ -329,7 +343,7 @@ export class AdvanceEditorComponent implements OnInit {
           jsonDefination.properties[element.key] = { 'type': 'object' };
         }
       }
-
+   
       tempFjson[element.key] = this.signleFieldData(element);
       if (element.hasOwnProperty('validate') && element.validate.required == true) {
         this.jsonFields.definitions[this.jsonTitle].required.push(element.key);
@@ -339,14 +353,8 @@ export class AdvanceEditorComponent implements OnInit {
       //  this.jsonFields["status"] = "PUBLISHED"
       }
 
-      if (element.hasOwnProperty('validate') && element.validate.minLength) {
-        tempFjson[element.key].minLength = element.validate.minLength;
-      }
-
-      if (element.hasOwnProperty('validate') && element.validate.maxLength) {
-        tempFjson[element.key].maxLength = element.validate.maxLength;
-      }
-
+      tempFjson = this.checkValidate(element, tempFjson);
+    
       if (element.type == 'container') {
 
         let containerType = jsonDefination.properties[element.key].type;
@@ -424,11 +432,7 @@ export class AdvanceEditorComponent implements OnInit {
           }
         }
       }
-      if (element.hasOwnProperty('validate') && element.validate.customMessage) {
-        tempFjson[element.key].customMessage = element.validate.customMessage;
-      }
     });
-
     return tempFjson;
   }
 
@@ -532,27 +536,18 @@ export class AdvanceEditorComponent implements OnInit {
     if (fieldObj.hasOwnProperty('description')) {
       tempFjson[fieldObj.key]['description'] = fieldObj.description
     }
-
-    if(fieldObj.hasOwnProperty('validate') && fieldObj.validate.minLength){
-      tempFjson[fieldObj.key]['minLength'] = fieldObj.validate.minLength
-    }
-
-    if(fieldObj.hasOwnProperty('validate') && fieldObj.validate.maxLength){
-      tempFjson[fieldObj.key]['maxLength'] = fieldObj.validate.maxLength
-    }
-
-    if(fieldObj.hasOwnProperty('validate') && fieldObj.validate.customMessage){
-      tempFjson[fieldObj.key]['customMessage'] = fieldObj.validate.customMessage
-    }
-
+    
+    tempFjson = this.checkValidate(fieldObj, tempFjson);
+    
     if (fieldObj.type == 'datetime') {
       tempFjson[fieldObj.key]['format'] = 'date'
     }
-     return tempFjson[fieldObj.key];
+
+    return tempFjson[fieldObj.key];
 
   }
 
-
+  
   onDeleteComponent(e) {
   }
 

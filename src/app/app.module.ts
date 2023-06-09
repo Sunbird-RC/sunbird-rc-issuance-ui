@@ -109,7 +109,11 @@ export function constValidationMessage(err, field: FormlyFieldConfig) {
 }
 
 export function errValidatorMessage(error: any, field: FormlyFieldConfig) {
-  return `Please Enter ${field.templateOptions.label}`;
+  if (field.templateOptions.customMessage) {
+    return field.templateOptions.customMessage;
+  } else {
+    return `Please Enter ${field.templateOptions.label}`;
+  }
 }
 
 export function patternValidatorMessage(error: any, field: FormlyFieldConfig) {
@@ -219,8 +223,10 @@ console.log(configData['default']);
       { name: 'panel', component: PanelWrapperComponent }],
       validationMessages: [
         { name: 'required', message:  errValidatorMessage },
-        { name: 'pattern', message: patternValidatorMessage }
-
+        { name: 'pattern', message: patternValidatorMessage },
+        { name: 'minlength', message: minlengthValidationMessage },
+        { name: 'maxlength', message: maxlengthValidationMessage }
+           
       ],
       types: [
         { name: 'string', extends: 'input' },

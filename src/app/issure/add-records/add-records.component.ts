@@ -8,6 +8,7 @@ import { GeneralService } from 'src/app/services/general/general.service';
 import { ToastMessageService } from 'src/app/services/toast-message/toast-message.service';
 import { SchemaService } from '../../services/data/schema.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AbstractControl } from '@angular/forms';
 @Component({
   selector: 'app-add-records',
   templateUrl: './add-records.component.html',
@@ -37,6 +38,9 @@ export class AddRecordsComponent implements OnInit {
   item: any;
   fieldKey: any;
   fieldName;
+  containerName: any;
+  flag: boolean = false;
+  anyOfFlag: boolean = true;
 
   constructor(public schemaService: SchemaService,
     public toastMsg: ToastMessageService,
@@ -63,6 +67,7 @@ export class AddRecordsComponent implements OnInit {
       this.schema["definitions"] = this.definations;
       this.schema["properties"] = this.property;
       this.schema["required"] = this.definations[this.schemaName].required;
+      this.schema["anyOf"] = this.definations[this.schemaName].anyOf;
 
       this.loadSchema();
 
@@ -80,16 +85,19 @@ export class AddRecordsComponent implements OnInit {
     this.fields[0].fieldGroup.forEach((fieldObj, index) => {
       console.log({ fieldObj });
       this.fieldName = fieldObj.key;
+      if(this.fieldName){
       tempFields[index] = this.formBuildingSingleField(fieldObj, this.fields[0].fieldGroup[index], this.schema);
-
+      
       if (fieldObj.type == 'object') {
-
-        tempFields[index]['templateOptions']['label'] = fieldObj.hasOwnProperty('label') ? fieldObj['label'] : undefined;
+        this.containerName = this.fieldKey;
+        this.flag = true;
+        tempFields[index]['templateOptions']['label'] = fieldObj['templateOptions'].hasOwnProperty('label') ? fieldObj['templateOptions']['label'] : undefined;
+        console.log(tempFields[index]['templateOptions']['label'])
         tempFields[index]['templateOptions']['description'] = fieldObj.hasOwnProperty('description') ? fieldObj['description'] : undefined;
 
-        if (fieldObj.hasOwnProperty('label')) {
-          tempFields[index]['wrappers'] = ['panel'];
-        }
+        // if (fieldObj['templateOptions'].hasOwnProperty('label')) {
+        //   tempFields[index]['wrappers'] = ['panel'];
+        // }
 
         fieldObj.fieldGroup.forEach((sfieldObj, sIndex) => {
           fieldObj.fieldGroup[sIndex] = this.formBuildingSingleField(sfieldObj, fieldObj.fieldGroup[sIndex], this.schema['properties'][this.fieldName]);
@@ -97,10 +105,11 @@ export class AddRecordsComponent implements OnInit {
         tempFields[index]['type'] = '';
         tempFields[index]['fieldGroup'] = fieldObj.fieldGroup
         // this.schema.properties[this.fieldKey]['required'].includes();
-
+        this.flag = false;
       }
       else if (fieldObj.type == 'array') {
       }
+    }
     });
 
 
@@ -111,20 +120,20 @@ export class AddRecordsComponent implements OnInit {
     this.schemaloaded = true;
   }
 
+
   formBuildingSingleField(fieldObj, fieldSchena, requiredF) {
 
     this.fieldKey = fieldObj.key;
+    fieldObj['templateOptions']['label'] = this.fieldKey.charAt(0).toUpperCase() + this.fieldKey.slice(1);
     let tempObj = fieldSchena;
 
-    if(this.schema["properties"][this.fieldKey].hasOwnProperty('customMessage')){
-      fieldObj['templateOptions']['customMessage'] = this.schema["properties"][this.fieldKey]['customMessage']
-    }
+    
     if (!fieldObj['templateOptions'].hasOwnProperty('label') || fieldObj.templateOptions.label == undefined) {
       // let str: any = (fieldObj.templateOptions.label) ? fieldObj.templateOptions.label : fieldObj.key;
 
 
       //   let str: any = fieldObj.key;
-      tempObj['templateOptions']['label'] = this.fieldKey.charAt(0).toUpperCase() + this.fieldKey.slice(1);
+      tempObj['label'] = this.fieldKey.charAt(0).toUpperCase() + this.fieldKey.slice(1);
 
       if (requiredF.hasOwnProperty('required')) {
         if (requiredF.required.includes(this.fieldKey)) {
@@ -149,7 +158,7 @@ export class AddRecordsComponent implements OnInit {
     // }
 
     if (fieldObj.templateOptions['type'] == 'enum' || fieldObj.templateOptions.hasOwnProperty('options')) {
-      tempObj['type'] = (requiredF.properties.hasOwnProperty(fieldObj.key) && requiredF.properties[fieldObj.key].hasOwnProperty('fieldType')) ? requiredF.properties[fieldObj.key]['fieldType']: 'select';
+      tempObj['type'] = (requiredF.properties.hasOwnProperty(fieldObj.key) && requiredF.properties[fieldObj.key].hasOwnProperty('fieldType')) ? requiredF.properties[fieldObj.key]['fieldType'] : 'select';
       tempObj['templateOptions']['options'] = fieldObj.templateOptions.options;
     }
 
@@ -165,11 +174,37 @@ export class AddRecordsComponent implements OnInit {
       tempObj['type'] = 'input';
     }
 
-    if( fieldObj['key'] == 'number')
-    {
+    if (fieldObj['key'] == 'number') {
       tempObj['templateOptions']['type'] = 'number';
     }
 
+    if (this.flag) {
+      if (this.schema["properties"][this.containerName]["properties"][this.fieldKey].hasOwnProperty('customMessage')) {
+        fieldObj['templateOptions']['customMessage'] = this.schema["properties"][this.containerName]["properties"][this.fieldKey]['customMessage'];
+      }
+    }
+
+    if (!this.flag) {
+      if (this.schema["properties"][this.fieldKey].hasOwnProperty('customMessage')) {
+        fieldObj['templateOptions']['customMessage'] = this.schema["properties"][this.fieldKey]['customMessage']
+      }
+    }
+
+    if (this.anyOfFlag) {
+      if (requiredF.hasOwnProperty('anyOf') && requiredF['anyOf']) {
+        if (this.fieldKey == requiredF['anyOf'][0].required) {
+          const hideExpressions = [];
+          const anyOfObject = requiredF.anyOf[0];
+          const propertyName = Object.keys(anyOfObject.properties)[0];
+          requiredF.anyOf.forEach((condition) => {
+            const expression = `model['${propertyName}'] === ${JSON.stringify(condition.properties[propertyName]['const'])}`;
+            hideExpressions.push(expression);
+          });
+          tempObj.templateOptions['hideExpression'] = `(${hideExpressions.join(' || ')})`;
+          this.anyOfFlag = false;
+        }
+      }
+    }
     return tempObj;
 
     // this.fields[0].fieldGroup[0]['label'] = (fieldObj.name).toUpperCase();

@@ -303,9 +303,6 @@ export class PreviewHtmlComponent implements OnInit {
     });
   }
 
-  dataChange() {
-    window.location.reload();
-  }
 
 async goTpCertificatePg()  {
   await  this.router.navigateByUrl('/certificate');
@@ -537,6 +534,8 @@ async goTpCertificatePg()  {
       let result = JSON.stringify(this.schemaContent);
 
       result = this.replaceAll(result, this.oldTemplateName, this.templateName);
+      result = this.replaceAll(result, 'nameofthestudent', 'name');
+
 
       let payload = {
         "name": this.templateName,

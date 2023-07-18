@@ -240,7 +240,7 @@ export class AdvanceEditorComponent implements OnInit {
 
 
       this.jsonFields.definitions[this.jsonTitle].properties = tempField;
-      if(typeof(this.vcFields) == 'object'){
+      if (typeof (this.vcFields) == 'object') {
         this.updateCredentialTemp();
       }
 
@@ -315,7 +315,7 @@ export class AdvanceEditorComponent implements OnInit {
     this.newItemEvent.emit(this.jsonEditor);
   }
 
-  checkValidate(element, tempFjson){
+  checkValidate(element, tempFjson) {
     if (element.hasOwnProperty('validate') && element.validate.minLength) {
       tempFjson[element.key].minLength = element.validate.minLength;
     }
@@ -323,11 +323,11 @@ export class AdvanceEditorComponent implements OnInit {
     if (element.hasOwnProperty('validate') && element.validate.maxLength) {
       tempFjson[element.key].maxLength = element.validate.maxLength;
     }
-    if(element.hasOwnProperty('validate') && element.validate.customMessage){
-         tempFjson[element.key]['customMessage'] = element.validate.customMessage
-      }
+    if (element.hasOwnProperty('validate') && element.validate.customMessage) {
+      tempFjson[element.key]['customMessage'] = element.validate.customMessage
+    }
     return tempFjson;
-  } 
+  }
 
   formioJsonToPlainJSONSchema(event, components, jsonDefination) {
     let tempFjson = {};
@@ -338,23 +338,35 @@ export class AdvanceEditorComponent implements OnInit {
         let temp = element.label.replaceAll(/\s/g, '');
 
         element.key = temp.charAt(0).toLowerCase() + temp.slice(1);
-       
+
         if (element.type == 'container') {
           jsonDefination.properties[element.key] = { 'type': 'object' };
         }
       }
-   
+
       tempFjson[element.key] = this.signleFieldData(element);
       if (element.hasOwnProperty('validate') && element.validate.required == true) {
         this.jsonFields.definitions[this.jsonTitle].required.push(element.key);
       }
       if (element.hasOwnProperty('unique') && element.unique == true) {
         this.jsonFields["_osConfig"]["uniqueIndexFields"].push(element.key);
-      //  this.jsonFields["status"] = "PUBLISHED"
+        //  this.jsonFields["status"] = "PUBLISHED"
       }
 
       tempFjson = this.checkValidate(element, tempFjson);
-    
+
+      if (element.hasOwnProperty('conditional') && element.conditional.show) {
+        const conditionSchema = {
+          properties: {
+            [element.conditional.when]: {
+              const: element.conditional.eq
+            }
+          },
+          required: [element.key]
+        };
+         jsonDefination.anyOf = jsonDefination.anyOf || [];
+         jsonDefination.anyOf.push(conditionSchema);
+      }
       if (element.type == 'container') {
 
         let containerType = jsonDefination.properties[element.key].type;
@@ -368,15 +380,14 @@ export class AdvanceEditorComponent implements OnInit {
 
         let enumArr = [];
 
-        for(let i = 0; i<  element['data']['values'].length; i++)
-        {
-            enumArr.push( element['data']['values'][i]['label'])
+        for (let i = 0; i < element['data']['values'].length; i++) {
+          enumArr.push(element['data']['values'][i]['label'])
         }
 
         tempFjson[element.key] = {
           "type": "string",
           "title": element.label,
-          "enum" : enumArr,
+          "enum": enumArr,
           "fieldType": "select"
           // "widget": {
           //   "formlyConfig": {
@@ -536,9 +547,9 @@ export class AdvanceEditorComponent implements OnInit {
     if (fieldObj.hasOwnProperty('description')) {
       tempFjson[fieldObj.key]['description'] = fieldObj.description
     }
-    
+
     tempFjson = this.checkValidate(fieldObj, tempFjson);
-    
+
     if (fieldObj.type == 'datetime') {
       tempFjson[fieldObj.key]['format'] = 'date'
     }
@@ -547,7 +558,7 @@ export class AdvanceEditorComponent implements OnInit {
 
   }
 
-  
+
   onDeleteComponent(e) {
   }
 

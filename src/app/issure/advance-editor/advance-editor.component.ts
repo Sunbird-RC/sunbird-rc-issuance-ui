@@ -326,6 +326,9 @@ export class AdvanceEditorComponent implements OnInit {
     if(element.hasOwnProperty('validate') && element.validate.customMessage){
          tempFjson[element.key]['customMessage'] = element.validate.customMessage
       }
+      if(element.hasOwnProperty('validate') && element.validate.pattern){
+        tempFjson[element.key]['pattern'] = element.validate.pattern
+     }
     return tempFjson;
   } 
 

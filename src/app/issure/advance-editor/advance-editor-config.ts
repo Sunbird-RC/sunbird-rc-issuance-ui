@@ -159,10 +159,6 @@ var editTextfieldCompValidation = [
         "ignore": true
     },
     {
-        "key": "validate.pattern",
-        "ignore": true
-    },
-    {
         "key": "errorLabel",
         "ignore": true
     },

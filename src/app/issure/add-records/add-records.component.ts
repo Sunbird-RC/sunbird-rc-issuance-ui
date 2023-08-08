@@ -156,6 +156,9 @@ export class AddRecordsComponent implements OnInit {
     if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('format')) {
       tempObj['templateOptions']['type'] = this.property[this.fieldKey].format;
     }
+    if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('pattern')) {
+      tempObj['templateOptions']['pattern'] = this.property[this.fieldKey].pattern;
+    }
 
     if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('placeholder')) {
       tempObj['templateOptions']['placeholder'] = this.property[this.fieldKey].placeholder;

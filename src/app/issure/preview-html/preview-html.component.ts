@@ -45,10 +45,11 @@ export class PreviewHtmlComponent implements OnInit {
   certificateTitle: any;
   propertyArr: any = [];
   iscredentialSubAdd: boolean;
-
+  id: string;
 
   constructor(public router: Router, public route: ActivatedRoute, public toastMsg: ToastMessageService,
     public generalService: GeneralService, public schemaService: SchemaService) {
+    this.id = this.route.snapshot.paramMap.get('id'); 
     this.editorOptions = new JsonEditorOptions()
     // this.editorOptions.modes = ['code']; // set all allowed modes
 
@@ -59,7 +60,8 @@ export class PreviewHtmlComponent implements OnInit {
 
     this.userHtml = '';
 
-    if (localStorage.getItem('sampleData')) {
+    if(!this.id){
+   if (localStorage.getItem('sampleData')) {
       this.sampleData = JSON.parse(localStorage.getItem('sampleData'));
     } else {
       this.editor.runCommand('core:canvas-clear');
@@ -67,6 +69,7 @@ export class PreviewHtmlComponent implements OnInit {
       this.sampleData = this.router.getCurrentNavigation().extras.state.item;
       localStorage.setItem('sampleData', JSON.stringify(this.sampleData));
     }
+  }
 
     this.generalService.getData('/Issuer').subscribe((res) => {
 
@@ -76,12 +79,47 @@ export class PreviewHtmlComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.readHtmlSchemaContent(this.sampleData);
-    this.grapesJSDefine();
+    this.userHtml = '';
+    if(this.id){
+     await this.getSchemaById();
+    }else{
+      await this.readHtmlSchemaContent(this.sampleData);
+      this.grapesJSDefine();
+
+    }
+
     /* ------END-------------------------Advance Editor ----------------------- */
 
   }  //onInit();
 
+
+  getSchemaById()
+  {
+    this.generalService.getData('Schema/' + this.id).subscribe((res) => {
+      this.schemaContent = res.schema;
+      this.sampleData = JSON.parse(res.schema); //._osConfig['certificateTemplates']['html'];
+      let url = this.sampleData._osConfig['certificateTemplates']['html'].replace("minio://", "")
+      // let data = JSON.parse(res.schema);
+      this.certificateTitle = this.sampleData['title']; 
+      this.templateName = this.certificateTitle;
+      this.userJson = this.sampleData;
+      this.addCrtTemplateFields(this.sampleData);
+      this.getCrtTempFields(this.userJson);
+
+      this.generalService.getData(url, false, {}).subscribe((res) => {
+        console.log(res);
+        this.userHtml = res;
+        this.grapesJSDefine();
+
+      },(err)=>{
+        console.log(err );
+        this.userHtml = err.error.text;
+        this.grapesJSDefine();
+
+      })
+
+    });
+  }
 
   grapesJSDefine()
   {
@@ -305,8 +343,13 @@ export class PreviewHtmlComponent implements OnInit {
 
 
 async goTpCertificatePg()  {
-  await  this.router.navigateByUrl('/certificate');
-  window.location.reload();
+  if(!this.id){
+    await  this.router.navigateByUrl('/certificate');
+    window.location.reload();
+  }else{
+    await  this.router.navigateByUrl('/dashboard');
+  }
+ 
   }
 
   back() {
@@ -332,10 +375,11 @@ async goTpCertificatePg()  {
       .then(data => {
            this.schemaContent = data;
         data = JSON.parse(data);
-        this.certificateTitle = data['title'];
+        this.certificateTitle = data['title']; 
+
       //  this.templateName = this.certificateTitle;
         this.userJson = data;
-        this.addCrtTemplateFields();
+        this.addCrtTemplateFields(this.schemaContent);
         this.getCrtTempFields(this.userJson);
       });
 
@@ -350,23 +394,7 @@ async goTpCertificatePg()  {
     //  this.templateName = this.certificateTitle;
       this.userJson = newSchema.default;
       console.log(newSchema);
-
     }
-
-   
-  }
-
-
-  addCrtTemplateFields111(userJson) {
-    let url = this.userJson['_osConfig']['credentialTemplate'];
-
-    this.userHtml = '';
-    fetch(url)
-      .then(response => response.text())
-      .then(data => {
-        console.log({ data });
-      });
-
   }
 
   getCrtTempFields(certificateSchema) {
@@ -400,7 +428,7 @@ async goTpCertificatePg()  {
     }
     });
 
-   this.addCrtTemplateFields();
+   this.addCrtTemplateFields(this.sampleData);
     this.grapesJSDefine();
 
   }
@@ -417,8 +445,10 @@ async goTpCertificatePg()  {
     return str.replace(new RegExp(escapedFind, 'g'), replace);
   }
 
-  addCrtTemplateFields() {
-    this.schemaContent = (this.schemaContent && (typeof(this.sampleData) != 'object')) ? JSON.parse(this.schemaContent) : this.userJson;
+  addCrtTemplateFields(schemaContent) {
+    // this.schemaContent = (this.schemaContent && (typeof(this.sampleData) != 'object')) ? JSON.parse(this.schemaContent) : this.userJson;
+    this.schemaContent = ( (typeof(schemaContent) != 'object')) ? JSON.parse(schemaContent) : this.userJson;
+
 
     let certTmpJson = (this.schemaContent && this.schemaContent != "") ? this.schemaContent : this.userJson;
     certTmpJson = (certTmpJson['_osConfig'].hasOwnProperty('credentialTemplate')) ? certTmpJson['_osConfig']['credentialTemplate'] : '';
@@ -447,8 +477,7 @@ async goTpCertificatePg()  {
 
         if(!this.schemaContent._osConfig.hasOwnProperty('credentialTemplate'))
         {
-          this.schemaContent._osConfig = {
-            'credentialTemplate' : {
+          this.schemaContent._osConfig['credentialTemplate'] = {
               '@context' : [
                 "https://www.w3.org/2018/credentials/v1",
                 {    
@@ -458,7 +487,7 @@ async goTpCertificatePg()  {
                   }
                 }
               ]
-            }
+            
           }
         }
 
@@ -545,6 +574,7 @@ async goTpCertificatePg()  {
       }
 
       if (res.documentLocations[0]) {
+        if(!this.id){
         this.generalService.postData('/Schema', payload).subscribe((res) => {
           localStorage.setItem('content', '');
           this.router.navigate(['/dashboard']);
@@ -553,6 +583,16 @@ async goTpCertificatePg()  {
           this.toastMsg.error('error', err.error.params.errmsg)
 
         })
+      }else{
+        this.generalService.putData('/Schema', this.id, payload).subscribe((res) => {
+          localStorage.setItem('content', '');
+          this.router.navigate(['/dashboard']);
+        }, (err) => {
+          console.log('err ----', err);
+          this.toastMsg.error('error', err.error.params.errmsg)
+
+        })
+      }
       }
     })
 

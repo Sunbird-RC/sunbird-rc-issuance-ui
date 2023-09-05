@@ -114,6 +114,8 @@ const routes: Routes = [
 { path: 'certificate', component: AddCertificateComponent , canActivate: [AuthGuard] },
 
  { path: 'preview-html', component: PreviewHtmlComponent  , canActivate: [AuthGuard] },
+ { path: 'preview-html/:id', component: PreviewHtmlComponent  , canActivate: [AuthGuard] },
+
  { path: 'verify', component: VerifyComponent  },
  { path: 'advance-editor', component: AdvanceEditorComponent  },
  { path: 'pdf-view', component: PdfViewComponent  , canActivate: [AuthGuard] },

@@ -88,6 +88,14 @@ export class AdvanceEditorComponent implements OnInit {
     }
 
     delete jsonFields['_osConfig']['credentialTemplate'];
+    this.jsonSchemaToFormioConvrt(jsonFields);
+
+
+  }
+
+  jsonSchemaToFormioConvrt(jsonFields)
+  {
+    this.myForm['components'] = [];
     this.jsonFields = jsonFields;
     this.jsonTitle = jsonFields['title'];
     let jsonSchema = jsonFields.definitions[this.jsonTitle].properties;
@@ -304,7 +312,7 @@ export class AdvanceEditorComponent implements OnInit {
     this.vcEditor.set(this.vcFields);
   }
 
-  showJson(event) {
+  showJson(event : any) {
     console.log(event);
     this.vcFields = JSON.parse(event.target.value);
     this.vcFieldsText = event.target.value;

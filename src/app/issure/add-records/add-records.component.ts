@@ -99,8 +99,7 @@ export class AddRecordsComponent implements OnInit {
         // this.schema.properties[this.fieldKey]['required'].includes();
 
       }
-      else if (fieldObj.type == 'array') {
-      }
+     
     });
 
 

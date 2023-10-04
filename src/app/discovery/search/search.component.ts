@@ -132,7 +132,7 @@ export class SearchComponent implements OnInit {
 
         fieldset.filters.forEach((filter, index1) => {
 
-          if (this.privateFields != [] && !this.privateFields.includes('$.' + filter.propertyPath)) {
+          if (this.privateFields && !this.privateFields.includes('$.' + filter.propertyPath)) {
 
             let fieldObj = {
               key: filter.key,
@@ -189,7 +189,7 @@ export class SearchComponent implements OnInit {
         this.fields = [this.data[0]];
 
         fieldset.results.fields.forEach((fields) => {
-          if (this.privateFields != [] && !this.privateFields.includes('$.' + fields.property)) {
+          if (this.privateFields && !this.privateFields.includes('$.' + fields.property)) {
             this.cardFields.push(fields);
           }
         });

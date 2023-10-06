@@ -22,7 +22,7 @@ export class AttestationComponent implements OnInit {
     {
       key: 'note',
       type: 'textarea',
-      templateOptions: {
+      props: {
         label: 'Reason for denied',
         required: true,
         description: "This note will be sent to user",
@@ -35,7 +35,7 @@ export class AttestationComponent implements OnInit {
     {
       key: 'note',
       type: 'textarea',
-      templateOptions: {
+      props: {
         label: 'Note',
         required: true,
         description: "note sent on user"
@@ -171,8 +171,8 @@ export class AttestationComponent implements OnInit {
         this.claimData = res.claim;
         this.notes = res.notes;
         let noteDesc = 'This note will be sent to ' + this.claimData?.requestorName;
-        this.denyFields[0].templateOptions.description = noteDesc;
-        this.noteFields[0].templateOptions.description = noteDesc;
+        this.denyFields[0].props.description = noteDesc;
+        this.noteFields[0].props.description = noteDesc;
 
         this.generalService.getData("/"+this.claimData.propertyURI).subscribe((res) => {
           console.log("res2",res)
@@ -249,10 +249,10 @@ export class AttestationComponent implements OnInit {
     //   this.note = event.note
     // }
 
-    //this.note = this.denyForm.value.note ? this.denyForm.value.note : this.note;
+    this.note = (this.denyForm.value.hasOwnProperty('note') && this.denyForm?.value['note']) ? this.denyForm.value['note'] : this.note;
     let data = {
       "action": action,
-      "notes": this.denyForm.value.note ? this.denyForm.value.note : this.note
+      "notes":  this.note
   }
   console.log("data--",data);
     var url = this.entity+"/claims/"+this.claimId+"/attest"

@@ -125,10 +125,10 @@ export class DashboardComponent implements OnInit {
   addWidget(field) {   
       this.property[field.name]['widget'] = {
         "formlyConfig": {
-          "templateOptions": {}
+          "props": {}
         }
       }
-      this.property[field.name]['widget']['formlyConfig']['templateOptions']['disabled'] = field.disabled;
+      this.property[field.name]['widget']['formlyConfig']['props']['disabled'] = field.disabled;
     }
      
   

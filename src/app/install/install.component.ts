@@ -26,7 +26,7 @@ export class InstallComponent implements OnInit {
     {
       key: 'title',
       type: 'input',
-      templateOptions: {
+      props: {
         placeholder: 'ex: Sunbird RC',
         required: true,
         addonLeft: {
@@ -39,7 +39,7 @@ export class InstallComponent implements OnInit {
       key: 'environment',
       type: 'select',
       defaultValue: 'development',
-      templateOptions: {
+      props: {
         label: 'Select environment',
         required: true,
         addonLeft: {
@@ -55,7 +55,7 @@ export class InstallComponent implements OnInit {
       key: 'appType',
       type: 'select',
       defaultValue: 'Attestation',
-      templateOptions: {
+      props: {
         label: 'Select type of appplication',
         required: true,
         addonLeft: {
@@ -72,7 +72,7 @@ export class InstallComponent implements OnInit {
     {
       key: 'baseUrl',
       type: 'input',
-      templateOptions: {
+      props: {
         placeholder: 'ex: https://example.com/api/v1',
         required: true,
         addonLeft: {
@@ -84,7 +84,7 @@ export class InstallComponent implements OnInit {
     {
       key: 'schemaUrl',
       type: 'input',
-      templateOptions: {
+      props: {
         placeholder: 'ex: https://example.com/api/docs/schema.json',
         required: true,
         addonLeft: {
@@ -96,11 +96,11 @@ export class InstallComponent implements OnInit {
     {
       key: 'keycloak',
       wrappers: ['panel'],
-      templateOptions: { label: 'Keycloak Configurations' },
+      props: { label: 'Keycloak Configurations' },
       fieldGroup: [{
         key: 'url',
         type: 'input',
-        templateOptions: {
+        props: {
           placeholder: 'ex: https://example.com/auth',
           required: true,
           type: 'text',
@@ -113,7 +113,7 @@ export class InstallComponent implements OnInit {
       {
         key: 'realm',
         type: 'input',
-        templateOptions: {
+        props: {
           required: true,
           type: 'text',
           addonLeft: {
@@ -124,7 +124,7 @@ export class InstallComponent implements OnInit {
       {
         key: 'clientId',
         type: 'input',
-        templateOptions: {
+        props: {
           required: true,
           type: 'text',
           addonLeft: {
@@ -137,7 +137,7 @@ export class InstallComponent implements OnInit {
     {
       key: 'language',
       type: 'select',
-      templateOptions: {
+      props: {
         label: 'Select Default Language',
         placeholder: 'Select Default language',
         required: true,
@@ -150,7 +150,7 @@ export class InstallComponent implements OnInit {
       key: 'configFolder',
       type: 'input',
       defaultValue: '/assets/config',
-      templateOptions: {
+      props: {
         addonLeft: {
           text: 'configFolder:',
         },
@@ -162,13 +162,13 @@ export class InstallComponent implements OnInit {
     { 
       key: 'default_theme',
       wrappers: ['panel'],
-      templateOptions: { label: 'Default Theme' },
+      props: { label: 'Default Theme' },
       fieldGroup: [
         {
           key: 'logoPath',
           type: 'input',
           defaultValue: '/assets/images/default-logo.png',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'logoPath:',
             },
@@ -180,7 +180,7 @@ export class InstallComponent implements OnInit {
           key: 'primaryColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Primary color:',
             },
@@ -192,7 +192,7 @@ export class InstallComponent implements OnInit {
           key: 'secondaryColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Secondary color:',
             },
@@ -204,7 +204,7 @@ export class InstallComponent implements OnInit {
           key: 'bodyBackground',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Body Backgroud color:',
             },
@@ -216,7 +216,7 @@ export class InstallComponent implements OnInit {
           key: 'cardBackground',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Card Backgroud color:',
             },
@@ -228,7 +228,7 @@ export class InstallComponent implements OnInit {
           key: 'tagsBackground',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Tags Backgroud color:',
             },
@@ -240,7 +240,7 @@ export class InstallComponent implements OnInit {
           key: 'navLabelColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Navigation Lable color:',
             },
@@ -252,7 +252,7 @@ export class InstallComponent implements OnInit {
           key: 'headerColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Header color:',
             },
@@ -264,7 +264,7 @@ export class InstallComponent implements OnInit {
           key: 'primaryTextColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Primary Text color:',
             },
@@ -276,7 +276,7 @@ export class InstallComponent implements OnInit {
           key: 'secondaryTextColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Secondary Text color:',
             },
@@ -289,7 +289,7 @@ export class InstallComponent implements OnInit {
           key: 'headerLinkColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Header Link color:',
             },
@@ -301,7 +301,7 @@ export class InstallComponent implements OnInit {
           key: 'linkColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Link color:',
             },
@@ -313,7 +313,7 @@ export class InstallComponent implements OnInit {
           key: 'secondaryBtnBgColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Secondary Button Background color:',
             },
@@ -326,13 +326,13 @@ export class InstallComponent implements OnInit {
     { 
       key: 'dark_theme',
       wrappers: ['panel'],
-      templateOptions: { label: 'Dark Theme' },
+      props: { label: 'Dark Theme' },
       fieldGroup: [
         {
           key: 'logoPath',
           type: 'input',
           defaultValue: '/assets/images/dark-logo.png',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'logoPath:',
             },
@@ -344,7 +344,7 @@ export class InstallComponent implements OnInit {
           key: 'primaryColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Primary color:',
             },
@@ -356,7 +356,7 @@ export class InstallComponent implements OnInit {
           key: 'secondaryColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Secondary color:',
             },
@@ -368,7 +368,7 @@ export class InstallComponent implements OnInit {
           key: 'bodyBackground',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Body Backgroud color:',
             },
@@ -380,7 +380,7 @@ export class InstallComponent implements OnInit {
           key: 'cardBackground',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Card Backgroud color:',
             },
@@ -392,7 +392,7 @@ export class InstallComponent implements OnInit {
           key: 'tagsBackground',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Tags Backgroud color:',
             },
@@ -404,7 +404,7 @@ export class InstallComponent implements OnInit {
           key: 'navLabelColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Navigation Lable color:',
             },
@@ -416,7 +416,7 @@ export class InstallComponent implements OnInit {
           key: 'headerColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Header color:',
             },
@@ -428,7 +428,7 @@ export class InstallComponent implements OnInit {
           key: 'primaryTextColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Primary Text color:',
             },
@@ -440,7 +440,7 @@ export class InstallComponent implements OnInit {
           key: 'secondaryTextColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Secondary Text color:',
             },
@@ -452,7 +452,7 @@ export class InstallComponent implements OnInit {
           key: 'headerLinkColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Header Link color:',
             },
@@ -464,7 +464,7 @@ export class InstallComponent implements OnInit {
           key: 'linkColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Link color:',
             },
@@ -476,7 +476,7 @@ export class InstallComponent implements OnInit {
           key: 'secondaryBtnBgColor',
           type: 'color',
           defaultValue: '#000000',
-          templateOptions: {
+          props: {
             addonLeft: {
               text: 'Secondary Button Background color:',
             },
@@ -489,7 +489,7 @@ export class InstallComponent implements OnInit {
     {
       key: 'footerText',
       type: 'input',
-      templateOptions: {
+      props: {
         defaultValue: 'Sunbird Registry and Credencials',
         required: true,
         addonLeft: {

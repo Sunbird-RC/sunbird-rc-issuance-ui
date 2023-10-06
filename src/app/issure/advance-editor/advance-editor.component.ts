@@ -392,7 +392,7 @@ export class AdvanceEditorComponent implements OnInit {
           // "widget": {
           //   "formlyConfig": {
           //     "type": "enum",
-          //     "templateOptions": {
+          //     "props": {
           //       "options": element['data']['values']
           //     }
           //   }
@@ -409,7 +409,7 @@ export class AdvanceEditorComponent implements OnInit {
       } if (element.type == 'selectboxes') {
         tempFjson[element.key] = {
           type: 'select',
-          templateOptions: {
+          props: {
             label: element.label,
             multiple: true,
             options: element['values']
@@ -428,7 +428,7 @@ export class AdvanceEditorComponent implements OnInit {
         /*  tempFjson[element.key] = {
             "type": "radio",
             "title": element.label,
-            "templateOptions": {
+            "props": {
               "options": element['values']
             }
           }*/

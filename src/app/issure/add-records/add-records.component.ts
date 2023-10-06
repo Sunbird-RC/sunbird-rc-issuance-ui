@@ -84,8 +84,8 @@ export class AddRecordsComponent implements OnInit {
 
       if (fieldObj.type == 'object') {
 
-        tempFields[index]['templateOptions']['label'] = fieldObj.hasOwnProperty('label') ? fieldObj['label'] : undefined;
-        tempFields[index]['templateOptions']['description'] = fieldObj.hasOwnProperty('description') ? fieldObj['description'] : undefined;
+        tempFields[index]['props']['label'] = fieldObj.hasOwnProperty('label') ? fieldObj['label'] : undefined;
+        tempFields[index]['props']['description'] = fieldObj.hasOwnProperty('description') ? fieldObj['description'] : undefined;
 
         if (fieldObj.hasOwnProperty('label')) {
           tempFields[index]['wrappers'] = ['panel'];
@@ -99,8 +99,7 @@ export class AddRecordsComponent implements OnInit {
         // this.schema.properties[this.fieldKey]['required'].includes();
 
       }
-      else if (fieldObj.type == 'array') {
-      }
+     
     });
 
 
@@ -117,51 +116,51 @@ export class AddRecordsComponent implements OnInit {
     let tempObj = fieldSchena;
 
     if(this.schema["properties"][this.fieldKey].hasOwnProperty('customMessage')){
-      fieldObj['templateOptions']['customMessage'] = this.schema["properties"][this.fieldKey]['customMessage']
+      fieldObj['props']['customMessage'] = this.schema["properties"][this.fieldKey]['customMessage']
     }
-    if (!fieldObj['templateOptions'].hasOwnProperty('label') || fieldObj.templateOptions.label == undefined) {
-      // let str: any = (fieldObj.templateOptions.label) ? fieldObj.templateOptions.label : fieldObj.key;
+    if (!fieldObj['props'].hasOwnProperty('label') || fieldObj.props.label == undefined) {
+      // let str: any = (fieldObj.props.label) ? fieldObj.props.label : fieldObj.key;
 
 
       //   let str: any = fieldObj.key;
-      tempObj['templateOptions']['label'] = this.fieldKey.charAt(0).toUpperCase() + this.fieldKey.slice(1);
+      tempObj['props']['label'] = this.fieldKey.charAt(0).toUpperCase() + this.fieldKey.slice(1);
 
       if (requiredF.hasOwnProperty('required')) {
         if (requiredF.required.includes(this.fieldKey)) {
-          tempObj['templateOptions']['required'] = true;
+          tempObj['props']['required'] = true;
         }
       }
 
     } else {
 
-      if (fieldObj.templateOptions.label == undefined) {
+      if (fieldObj.props.label == undefined) {
         // let str: any = fieldObj.key;
 
-        tempObj['templateOptions']['label'] = this.fieldKey.charAt(0).toUpperCase() + this.fieldKey.slice(1);
+        tempObj['props']['label'] = this.fieldKey.charAt(0).toUpperCase() + this.fieldKey.slice(1);
       }
     }
 
 
     // if (requiredF.hasOwnProperty('required')) {
     //   if (requiredF.required.includes(this.fieldKey)) {
-    //     tempObj['templateOptions']['required'] = true;
+    //     tempObj['props']['required'] = true;
     //   }
     // }
 
-    if (fieldObj.templateOptions['type'] == 'enum' || fieldObj.templateOptions.hasOwnProperty('options')) {
+    if (fieldObj.props['type'] == 'enum' || fieldObj.props.hasOwnProperty('options')) {
       tempObj['type'] = (requiredF.properties.hasOwnProperty(fieldObj.key) && requiredF.properties[fieldObj.key].hasOwnProperty('fieldType')) ? requiredF.properties[fieldObj.key]['fieldType']: 'select';
-      tempObj['templateOptions']['options'] = fieldObj.templateOptions.options;
+      tempObj['props']['options'] = fieldObj.props.options;
     }
 
     if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('format')) {
-      tempObj['templateOptions']['type'] = this.property[this.fieldKey].format;
+      tempObj['props']['type'] = this.property[this.fieldKey].format;
     }
     if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('pattern')) {
-      tempObj['templateOptions']['pattern'] = this.property[this.fieldKey].pattern;
+      tempObj['props']['pattern'] = this.property[this.fieldKey].pattern;
     }
 
     if (this.property.hasOwnProperty(this.fieldKey) && this.property[this.fieldKey].hasOwnProperty('placeholder')) {
-      tempObj['templateOptions']['placeholder'] = this.property[this.fieldKey].placeholder;
+      tempObj['props']['placeholder'] = this.property[this.fieldKey].placeholder;
     }
 
     if (fieldObj['type'] == 'string' || fieldObj['type'] == 'number') {
@@ -170,7 +169,7 @@ export class AddRecordsComponent implements OnInit {
 
     if( fieldObj['key'] == 'number')
     {
-      tempObj['templateOptions']['type'] = 'number';
+      tempObj['props']['type'] = 'number';
     }
 
     return tempObj;

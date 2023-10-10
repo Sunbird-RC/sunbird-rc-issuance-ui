@@ -145,8 +145,8 @@ import { AddRecordsComponent } from './issure/add-records/add-records.component'
 import { PreviewHtmlComponent } from './issure/preview-html/preview-html.component';
 // import { CreateCertificateComponent } from './create-certificate/create-certificate.component';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
-import { VerifyComponent } from './issure/verify/verify.component' 
-// import { FormioModule } from 'angular-formio';
+import { VerifyComponent } from './issure/verify/verify.component';
+ import { FormioModule } from '@formio/angular';
 // import { NgxTextEditorModule } from 'ngx-text-editor';
 
 import * as configData from '../assets/config/config.json';
@@ -290,7 +290,7 @@ FormlyFieldStepper
     NgJsonEditorModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     // VerifyModule.forChild(configData['default']),
-    // FormioModule,
+    FormioModule,
     // NgxTextEditorModule
   ],
   exports: [TranslateModule],

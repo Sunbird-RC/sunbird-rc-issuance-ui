@@ -43,7 +43,6 @@ export class PdfViewComponent implements OnInit {
     public generalService: GeneralService, public http: HttpClient) {
     this.sanitizer = sanitizer;
     this.documentName = this.route.snapshot.paramMap.get('document');
-    console.log(this.documentName);
     this.vcOsid = this.route.snapshot.paramMap.get('id');
   
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ElementRef, ViewChild } from '@angular/core';
-// import { Formio } from '@formio/js';
+ import { Formio } from '@formio/js';
 
 import { editorConfig } from './advance-editor-config';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';

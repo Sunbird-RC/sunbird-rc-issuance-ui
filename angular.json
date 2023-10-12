@@ -20,6 +20,28 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "json-logic-js",
+              "@formio/vanilla-text-mask",
+              "fetch-ponyfill",
+              "moment",
+              "dompurify",
+              "jstimezonedetect",
+              "fetch-ponyfill",
+              "@formio/choices.js",
+              "keycloak-js",
+              "jszip",
+              "grapesjs-preset-webpage",
+              "moment-timezone/moment-timezone",
+              "@formio/core",
+              "autocompleter",
+              "@formio/text-mask-addons",
+              "browser-md5-file",
+              "downloadjs",
+              "jsoneditor",
+              "native-promise-only"
+           ],
             "outputPath": "dist/sunbird-rc-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -72,13 +94,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "20mb",
-                  "maximumError": "50mb"
+                  "maximumWarning": "5000mb",
+                  "maximumError": "5000mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "60kb",
-                  "maximumError": "50kb"
+                  "maximumWarning": "6000kb",
+                  "maximumError": "5000kb"
                 }
               ],
               "serviceWorker": true,

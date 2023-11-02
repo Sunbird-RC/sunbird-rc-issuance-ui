@@ -125,5 +125,22 @@ export class GeneralService {
     return this.translatedString;
   }
 
+  deleteData(apiUrl, wHeader: any = null) {
+    var url;
+   
+      url = `${this.baseUrl}/${apiUrl}`;
+    
+    url.replace('//', '/');
+    const req = {
+      url: url
+    };
+
+    if(wHeader != null)
+    {
+      req['header'] = wHeader;
+    }
+    return this.dataService.delete(req);
+  }
+
 }
 

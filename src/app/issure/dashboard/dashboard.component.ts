@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
   isOpen: boolean = true;
   modal: HTMLElement;
   res: any;
+  deletItem: { id: any; index: any; };
 
   constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
     private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
@@ -175,6 +176,24 @@ export class DashboardComponent implements OnInit {
     }, () => {
       this.closePops();
     });
+  }
+
+  deleteTemplate(){
+    this.generalService.deleteData('Schema/' + this.deletItem.id).subscribe((res)=>{
+      this.templatesItems.splice(1, this.deletItem.index);
+    })
+  }
+
+  successDelete(id, index)
+  {
+    this.deletItem = { 'id' : id, 'index' : index};
+    
+      var button = document.createElement("button");
+        button.setAttribute('data-toggle', 'modal');
+        button.setAttribute('data-target', `#successDeleteModal`);
+        document.body.appendChild(button)
+        button.click();
+        button.remove();
   }
 
 

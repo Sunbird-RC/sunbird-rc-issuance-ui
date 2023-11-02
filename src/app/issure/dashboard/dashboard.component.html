@@ -45,8 +45,13 @@
 
         <div *ngIf="templatesItems">
             <div class="d-flex flex-row flex-wrap p-0">
-                <div *ngFor="let item of templatesItems" class="card card-block mr-2 mb-2 p-4  col-sm-3">
-                    <p class="p16 fw-bold mb-1 font-600">{{item?.name}}                     </p>
+                <div *ngFor="let item of templatesItems; let i = index" class="card card-block mr-2 mb-2 p-4  col-sm-3">
+                   <div class="row">
+                    <span class="p16 fw-bold mb-1 font-600">{{item?.name}} 
+                        <i aria-hidden="true" class="fa fa-trash float-end btn-sm fa-lg" (click)="successDelete(item?.osid, i)"></i> 
+                    </span>
+                </div>
+                   
                    
                     <!-- <h2 class="font-600">0</h2>
                     <p class="p12 mb-1">Record</p> -->
@@ -99,6 +104,28 @@
                 </div>
             </div>
         </div>
+        <div id="successDeleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="successDeleteModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="p-4 modal-content">
+                <div class="modal-body">
+                    <div class="d-flex flex-column">
+
+                        <h3 class="mb-1 text-wb justify-content-center align-items-center">
+
+                            {{'DELETE_THIS_DOCUMENT' | translate}}
+                        </h3>
+                           <div class="mt-5" > 
+                            <button data-dismiss="modal" class="mb-2 btn p14 px-4  btn-sec-bg text-capitalize  btn-sm " (click)="reset()">{{'CANCEL'| translate}}</button>
+
+                                    <button (click)="deleteTemplate()" type="button" class="mb-2 px-4 btn p14 btn-bg text-capitalize float-end btn-sm label-primary btn-primary"
+                                        data-dismiss="modal">{{'OK' | translate}}</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
         <ng-template>
             <br>
             <div class="d-flex justify-content-center">

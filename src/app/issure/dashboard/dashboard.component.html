@@ -48,7 +48,7 @@
                 <div *ngFor="let item of templatesItems; let i = index" class="card card-block mr-2 mb-2 p-4  col-sm-3">
                    <div class="row">
                     <span class="p16 fw-bold mb-1 font-600">{{item?.name}} 
-                        <i aria-hidden="true" class="fa fa-trash float-end btn-sm fa-lg" (click)="successDelete(item?.osid, i)"></i> 
+                        <i aria-hidden="true" class="fa fa-trash float-end btn-sm fa-lg" (click)="DeleteItemPopup(item?.osid, i, item?.name)"></i> 
                     </span>
                 </div>
                    
@@ -111,10 +111,10 @@
                 <div class="modal-body">
                     <div class="d-flex flex-column">
 
-                        <h3 class="mb-1 text-wb justify-content-center align-items-center">
+                        <h4 class="mb-1 text-wb justify-content-center align-items-center">
 
-                            {{'DELETE_THIS_DOCUMENT' | translate}}
-                        </h3>
+                            {{'DELETE_THIS_DOCUMENT' | translate}} <b> {{deletItem?.title}} </b> {{'DOCUMENT' | translate}} ?
+                        </h4>
                            <div class="mt-5" > 
                             <button data-dismiss="modal" class="mb-2 btn p14 px-4  btn-sec-bg text-capitalize  btn-sm " (click)="reset()">{{'CANCEL'| translate}}</button>
 

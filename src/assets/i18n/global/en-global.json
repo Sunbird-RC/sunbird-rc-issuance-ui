@@ -226,6 +226,8 @@
     "DOWNLOAD_NOT_UPLOADED":"Document Not Uploaded",
     "COULD_NOT_UPLOAD":"Could not upload",
     "UPLOAD_AGAIN":"Please upload again.",
-    "DELETE_THIS_DOCUMENT": "Are you sure you want to delete "
+    "DELETE_THIS_DOCUMENT": "Are you sure you want to delete ",
+    "SOMETHING_WENT_WRONG_DELETE": "Something went wrong while deleting, please try again"
+
     
 }

@@ -13,25 +13,26 @@
         </div>
 
     </div> -->
-<br />
+    <br />
     <div class="d-flex mt-3" *ngIf="documentName">
-        <a  class="line-height32" href="/dashboard"><i
-            class="fa fa-angle-left primary-text mb-2"></i> </a> &nbsp; &nbsp;
-            
+        <a class="line-height32" href="/dashboard"><i class="fa fa-angle-left primary-text mb-2"></i> </a> &nbsp; &nbsp;
+
         <span class="heading-2 mt-1 fw-bold">{{documentName}}</span>
-        
+
     </div>
 
     <div class="mb-3 mt-3">
-        <span class="heading-2" *ngIf="recordItems?.length == 1 || !recordItems?.length">{{recordItems?.length}} Record</span>
+        <span class="heading-2" *ngIf="recordItems?.length == 1 || !recordItems?.length">{{recordItems?.length}}
+            Record</span>
         <span class="heading-2" *ngIf="recordItems?.length > 1">{{recordItems?.length}} Records</span>
-        
 
+        <button type="button" class="btn btn-primary btn-primary-sm text-capitalize float-end p0 mx-1"
+            (click)="DeleteItemPopup()"> Delete Record </button>
         <a> <button type="button" routerLink="/add-records/{{documentName}}/{{id}}"
-            class="btn btn-primary btn-primary-sm text-capitalize float-end p0">Add </button></a>
-   
-        
-            <!-- <div class="ml-4 float-end">
+                class="btn btn-primary btn-primary-sm text-capitalize float-end p0">Add </button></a>
+
+
+        <!-- <div class="ml-4 float-end">
                 <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
                   
                     <a> <button type="button" 
@@ -42,6 +43,7 @@
                 <a class="dropdown-item" href="/bulk-records/{{documentName}}/{{id}}">Add Bulk record</a>
                 </div>
             </div> -->
+
     </div>
 
     <div class="card" *ngIf="!recordItems?.length">
@@ -52,33 +54,70 @@
     </div>
 
     <div class="card" *ngIf="recordItems?.length">
-    <table class="card-body">
-        <tr>
-          <th class="heading-4 sb-gray-color">Name</th>
-          <th class="heading-4 sb-gray-color">Mobile Number </th>
-          <th class="heading-4 sb-gray-color">Date</th>
-          <th></th>
-        </tr>
-        <tr *ngFor="let item of recordItems" class="p-3">
-          <td class="heading-3 sb-text-primary" *ngIf="item?.name"> {{item?.name}}</td>
-          <td class="heading-3" *ngIf="item?.contact">{{item?.contact |mask:0:6}}</td>
-          <td class="heading-3" *ngIf="item?.osCreatedAt">{{item?.osCreatedAt | date : 'dd MMM y'}} </td>
-          <td class="d-flex justify-content-end">
-               <!--   <div (click)="downloadVc(item)">
+        <table class="card-body">
+            <tr>
+                <th class="heading-4 sb-gray-color m-1">Name</th>
+                <th class="heading-4 sb-gray-color">Mobile Number </th>
+                <th class="heading-4 sb-gray-color">Date</th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let item of recordItems; let i=index" class="p-3">
+
+                <td class="heading-3 sb-text-primary" *ngIf="item?.name">
+                    <input class="mx-2" type="checkbox" (click)="checkedItem(item?.osid, i)" /> {{item?.name}}
+                </td>
+                <td class="heading-3" *ngIf="item?.contact">{{item?.contact |mask:0:6}}</td>
+                <td class="heading-3" *ngIf="item?.osCreatedAt">{{item?.osCreatedAt | date : 'dd MMM y'}} </td>
+                <td class="d-flex justify-content-end">
+                    <!--   <div (click)="downloadVc(item)">
                 <i class="fa fa-download sb-text-primary cursor-pointer" aria-hidden="true" title="Download"></i>
             </div> -->
-         <a routerLink="/pdf-view/{{documentName}}/{{item?.osid}}">
-              <div (click)="onPress(item)"> 
-                <i class="fa fa-eye sb-text-primary cursor-pointer" aria-hidden="true" title="View Certificate" ></i>
-            </div> 
-        </a>
-     
-          </td>
-          <!-- <td class="float-end text-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></td> -->
-        </tr>
-      </table>
+
+                    <div (click)="onPress(item)">
+                        <a routerLink="/pdf-view/{{documentName}}/{{item?.osid}}">
+                            <i class="fa fa-eye sb-text-primary cursor-pointer" aria-hidden="true"
+                                title="View Certificate"></i>
+                        </a>
+                    </div>
+                    <div> &nbsp;
+                        <i aria-hidden="true" title="Delete Record" class="fa fa-edit  sb-text-primary float-end btn-sm"
+                            (click)="editRecord(item?.osid)"></i>
+                    </div>
+
+
+                </td>
+                <!-- <td class="float-end text-primary"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></td> -->
+            </tr>
+        </table>
     </div>
 
-    
+    <div id="successDeleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="successDeleteModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="p-4 modal-content">
+                <div class="modal-body">
+                    <div class="d-flex flex-column">
 
-</div>
+                        <h3 class="mb-1 text-wb justify-content-center align-items-center">
+                            {{'DELETE_THIS_DOCUMENT' | translate}} 
+                            <span *ngIf="selectedRows.length > 1">{{'RECORDS' | translate}}</span>
+                             <span *ngIf="selectedRows.length == 1">{{'RECORD' | translate}}</span>
+                            </h3>
+                        <div class="mt-5">
+                            <button data-dismiss="modal"
+                                class="mb-2 btn p14 px-4  btn-sec-bg text-capitalize  btn-sm ">{{'CANCEL'|
+                                translate}}</button>
+
+                            <button (click)="deleteTemplate()" type="button"
+                                class="mb-2 px-4 btn p14 btn-bg text-capitalize float-end btn-sm label-primary btn-primary"
+                                data-dismiss="modal">{{'OK' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>

@@ -8,6 +8,7 @@ import { GeneralService } from 'src/app/services/general/general.service';
 import { JSONSchema7 } from "json-schema";
 import { SchemaService } from 'src/app/services/data/schema.service';
 import { ToastMessageService } from 'src/app/services/toast-message/toast-message.service';
+
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
@@ -48,6 +49,7 @@ export class DashboardComponent implements OnInit {
   deletItem: { id: any; index: any;  title: any};
 
   constructor(public generalService: GeneralService, public router: Router, public toastMsg: ToastMessageService,
+    private translate: TranslateService,
     private formlyJsonschema: FormlyJsonschema, public schemaService: SchemaService) {
 
   }
@@ -181,6 +183,8 @@ export class DashboardComponent implements OnInit {
   deleteTemplate(){
     this.generalService.deleteData('Schema/' + this.deletItem.id).subscribe((res)=>{
       this.templatesItems.splice(this.deletItem.index, 1);
+    },(err)=>{
+      this.toastMsg.error('error', this.translate.instant('SOMETHING_WENT_WRONG_DELETE'));
     })
   }
 

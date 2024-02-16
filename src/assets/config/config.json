@@ -6,9 +6,9 @@
         "realm": "sunbird-rc",
         "clientId": "registry-frontend"
     },
-    "baseUrl": "/registry/api/v1",
+    "baseUrl": "/api/v1",
     "domainName": "",
-    "schemaUrl": "/registry/api/docs/swagger.json",
+    "schemaUrl": "/api/docs/swagger.json",
     "title": "Issuance Portal",
     "footerText": "Issuance Portal",
     "languages": [
